@@ -45,10 +45,6 @@ public class GuitarTab {
 
     }
 
-    /*
-    Need to check if note can exist, for example j# is not a note. wont likely comeup but want to reduce possible errors.
-     */
-
     public void generateTab(ArrayList<Note> notes){
 
         int count = 0;
@@ -57,30 +53,55 @@ public class GuitarTab {
         ArrayList<Note> simultanious_notes = new ArrayList<>();
         for(int i = 0; i<notes.size();i++) {
             //if single note call place note
+            if(i==13){
+                System.out.println();
+            }
             current_note = notes.get(i);
             if(previous_note==null||previous_note.tick==current_note.tick){
                 simultanious_notes.add(current_note);
-            }else{
+            }
+            else{
                 if (simultanious_notes.size()==1){
                     placeSingleNote(previous_note);
                 }else{
                     try {
-                        placeNotes(simultanious_notes);
+                        boolean[][] note_matrix = configureNotes(simultanious_notes);
+                        //place notes
+                        placeMultipleNotes(note_matrix,simultanious_notes);
+                        System.out.println();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     simultanious_notes.clear();
+                    simultanious_notes.add(current_note);
                 }
             }
 
             previous_note = current_note;
+            if(i==notes.size()-1){
+                try {
+                    boolean[][] note_matrix = configureNotes(simultanious_notes);
+                    //place notes
+                    placeMultipleNotes(note_matrix,simultanious_notes);
+                    System.out.println();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
         if(simultanious_notes.size()==1){
             placeSingleNote(current_note);
         }
 
 
+        System.out.println();
+    }
 
+    public void placeMultipleNotes(boolean note_matrix[][], ArrayList<Note> notes){
+        int counter = 0;
+        for (Note note:notes) {
+            placeNote(note_matrix[counter++],note.full_note_name,(int)note.tick);//this can be refactored
+        }
     }
 
     public void placeSingleNote(Note note){
@@ -90,7 +111,7 @@ public class GuitarTab {
         placeNote(note_array, note.full_note_name, (int)note.tick);//place the note according to which notes are free
     }
 
-    public void placeNotes(ArrayList<Note> notes) throws Exception {
+    public boolean[][] configureNotes(ArrayList<Note> notes) throws Exception {
         //check if each note is in range
         boolean[][] note_matrix = new boolean[6][];
         int counter = 0;
@@ -125,18 +146,48 @@ public class GuitarTab {
             //if count == 0
             //shift
             if(true_count==0){
-                Note temp = notes.get(i);
-                temp.setNote_octave(temp.note_octave+1);
-                notes.set(i,temp);
-                placeNotes(notes);
+                while (true){
+                    notes.get(i).setNote_octave(notes.get(i).note_octave+1);
+                    //check to see if string has been used already
+                    boolean[] temp_frets = findFretLocations(notes.get(i));
+                    System.out.println();
+                    for(int y = 0; y<i;y++){
+                        for(int x = 0; x<6;x++){
+                            if(note_matrix[y][x]==true){
+                                temp_frets[x]=false;
+                            }
+                        }
+                    }
+                    int temp_true_count=0;
+                    for (Boolean bool:temp_frets) {
+                        if(bool==true){
+                            temp_true_count++;
+                        }
+                    }
+                    if(temp_true_count==1){
+                        int note_index = 0;
+                        while(true){
+                            if(temp_frets[note_index]==true){
+                                note_matrix[i] = temp_frets;
+                                break;
+                            }else if(note_index>5){
+                                throw new Exception();
+                            }
+                            note_index++;
+                        }
+                        note_matrix = Set(note_matrix,i+1, notes.size(), note_index);
+                        break;
+                    } else if (temp_true_count>1) {
+                        note_matrix[i] = temp_frets;
+                        break;
+                    }
+                    //check true count
+                        //set if 1, break if >1
+                }
             }
-        }
-        for(int i=0;i< notes.size();i++){
-            System.out.println(notes.get(i).full_note_name);
-            placeNote(note_matrix[i],notes.get(i).full_note_name,(int)notes.get(i).tick);
 
         }
-        System.out.println();
+        return note_matrix;
 
     }
 
