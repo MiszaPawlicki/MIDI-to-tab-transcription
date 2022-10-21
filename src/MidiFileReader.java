@@ -2,6 +2,8 @@ import org.w3c.dom.events.Event;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import javax.sound.midi.*;
 
 public class MidiFileReader {
@@ -9,16 +11,23 @@ public class MidiFileReader {
     public static final int NOTE_ON = 0x90; //value for note on
     public static final int NOTE_OFF = 0x80;//value for note off
     public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}; //all possible notes regardless of octave that can be played
+    public static String path;
+    public static long tick_length;
+    public static int resolution;
+    public static ArrayList<Note> notes;
 
+    public MidiFileReader(String path) throws InvalidMidiDataException, IOException {
+        this.path = path;
+        this.resolution = getResolution(path);
+        this.tick_length = getTickLength(path);
+        this.notes = readMidiFile(path);
+    }
 
-
-    public static GuitarTab addToTab(String path) throws InvalidMidiDataException, IOException {
+    public static ArrayList<Note> readMidiFile(String path) throws InvalidMidiDataException, IOException {
         //read midi file in
         Sequence sequence = MidiSystem.getSequence(new File(path));
 
-        //create tab object
-        GuitarTab guitarTab = new GuitarTab((int) sequence.getTickLength());
-
+        ArrayList<Note> noteArrayList = new ArrayList<>();
         //loop through each track
         for(Track track : sequence.getTracks()){
 
@@ -53,7 +62,9 @@ public class MidiFileReader {
                         int note = key % 12;
                         String noteName = NOTE_NAMES[note];
 
-                        guitarTab.addNoteToTab(noteName,octave,(int)event.getTick());
+                        Note tempNote = new Note(event.getTick(),noteName,octave);
+
+                        noteArrayList.add(tempNote);
 
                         //System.out.println("Note added, " + noteName + octave + " key=" + key);
                     }
@@ -63,12 +74,28 @@ public class MidiFileReader {
             }
 
         }
-        return guitarTab;
+        return noteArrayList;
     }
 
+    public static long getTickLength(String path) throws InvalidMidiDataException, IOException {
+        Sequence sequence = MidiSystem.getSequence(new File(path));
+        return sequence.getTickLength();
+    };
+    public static int getResolution(String path) throws InvalidMidiDataException, IOException {
+        Sequence sequence = MidiSystem.getSequence(new File(path));
+        return sequence.getResolution();
+    }
     public static void main(String[] args) throws Exception{
-        GuitarTab guitarTab = addToTab("C:\\Users\\misza\\Documents\\work\\year 3\\project\\project_test_midi.mid");
-        guitarTab.printTab();
+        String path = "chords.mid";
+        //String path = "project_test_midi.mid";
+        MidiFileReader midiFileReader = new MidiFileReader(path);
+
+        for (Note n: notes) {
+            System.out.println("NOTE: "+n.full_note_name+ " - TICK: "+n.tick);
+        }
+        GuitarTab guitarTab = new GuitarTab((int)tick_length);
+        guitarTab.generateTab(notes);
+        guitarTab.printTab(resolution);
     }
 
 }

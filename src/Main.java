@@ -3,8 +3,8 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws InvalidMidiDataException, IOException {
-        GuitarTab guitarTab = MidiFileReader.addToTab("project_test_midi.mid");
-        guitarTab.printTab();
+        //GuitarTab guitarTab = MidiFileReader.addToTab("chords.mid");
+        //guitarTab.printTab();
         //aaaa
     }
 }

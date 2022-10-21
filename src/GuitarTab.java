@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class GuitarTab {
     protected int[] bottomE;
@@ -7,15 +9,22 @@ public class GuitarTab {
     protected int[] gString;
     protected int[] bString;
     protected int[] topE;
+
+    public final int[][] all_strings;// = {bottomE,aString,dString,gString,bString,topE};
+
     protected int numTicks;
 
     //notes
+
     public static final String[] BOTTOM_E_NOTE_NAMES = {"E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6"};
     public static final String[] A_STRING_NOTE_NAMES = {"A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6","F6","F#6","G6","G#6","A6"};
     public static final String[] D_STRING_NOTE_NAMES = {"D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6","C7","C#7","D7"};
     public static final String[] G_STRING_NOTE_NAMES = {"G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6","C7","C#7","D7","D#7","E7","F7","F#7","G7"};
     public static final String[] B_STRING_NOTE_NAMES = {"B5","C6", "C#6", "D6", "D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6","C7","C#7","D7","D#7","E7","F7","F#7","G7","G#7","A7","A#7","B7"};
     public static final String[] TOP_E_NOTE_NAMES = {"E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6","C7", "C#7", "D7", "D#7","E7", "F7", "F#7", "G7", "G#7", "A7", "A#7", "B7","C8", "C#8", "D8", "D#8","E8"};
+
+
+
     public GuitarTab(int numTicks) {
         this.bottomE = new int[numTicks];
         this.aString = new int[numTicks];
@@ -32,37 +41,7 @@ public class GuitarTab {
         Arrays.fill(this.topE, -1);
 
         this.numTicks = numTicks;
-    }
-
-    public void addNoteToTab(String note, int octave, int tick){
-
-
-        String fullNote = checkIfInRange(note,octave); //checking if the note is in range and correcting it to the closest note if not.
-
-
-        //check if note is within certain range else recursivley call
-
-        
-        if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(fullNote)){
-            this.bottomE[tick] = (char) Arrays.asList(BOTTOM_E_NOTE_NAMES).indexOf(fullNote);
-        }else if(Arrays.asList(A_STRING_NOTE_NAMES).contains(fullNote)) {
-            this.aString[tick] = (char) Arrays.asList(A_STRING_NOTE_NAMES).indexOf(fullNote);
-            System.out.println("A: "+ this.aString[tick]);
-        }else if(Arrays.asList(D_STRING_NOTE_NAMES).contains(fullNote)) {
-            this.dString[tick] = (char) Arrays.asList(D_STRING_NOTE_NAMES).indexOf(fullNote);
-            System.out.println("D: "+ this.dString[tick]);
-        }else if(Arrays.asList(G_STRING_NOTE_NAMES).contains(fullNote)) {
-            this.gString[tick] = (char) Arrays.asList(G_STRING_NOTE_NAMES).indexOf(fullNote);
-            System.out.println("G: "+ this.gString[tick]);
-        }else if(Arrays.asList(B_STRING_NOTE_NAMES).contains(fullNote)) {
-            this.bString[tick] = (char) Arrays.asList(B_STRING_NOTE_NAMES).indexOf(fullNote);
-            System.out.println("B: "+ this.bString[tick]);
-        }else if(Arrays.asList(TOP_E_NOTE_NAMES).contains(fullNote)) {
-            this.topE[tick] = (char) Arrays.asList(TOP_E_NOTE_NAMES).indexOf(fullNote);
-            System.out.println("Top E: "+ this.topE[tick]);
-        }
-
-
+        all_strings = new int[][]{bottomE, aString, dString, gString, bString, topE};
 
     }
 
@@ -70,43 +49,220 @@ public class GuitarTab {
     Need to check if note can exist, for example j# is not a note. wont likely comeup but want to reduce possible errors.
      */
 
+    public void generateTab(ArrayList<Note> notes){
 
-    public static String checkIfInRange(String note, int octave){
-        if(octave==4){//check if note is in lowest possible octave
-            if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(note+Integer.toString(octave))){ //check if note is in the Bottom E array
-                return note+Integer.toString(octave); //return string if present
+        int count = 0;
+        Note previous_note = null;
+        Note current_note = null;
+        ArrayList<Note> simultanious_notes = new ArrayList<>();
+        for(int i = 0; i<notes.size();i++) {
+            //if single note call place note
+            current_note = notes.get(i);
+            if(previous_note==null||previous_note.tick==current_note.tick){
+                simultanious_notes.add(current_note);
+            }else{
+                if (simultanious_notes.size()==1){
+                    placeSingleNote(previous_note);
+                }else{
+                    try {
+                        placeNotes(simultanious_notes);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    simultanious_notes.clear();
+                }
             }
 
-            octave+=1; //increment by an octave if not present
-            return note+Integer.toString(octave); //return new note
-
-        } else if (octave<4) {//if octave is less than 4 increment the octave and try the algorithm again recursivley
-            octave+=1;
-            return checkIfInRange(note, octave);
+            previous_note = current_note;
+        }
+        if(simultanious_notes.size()==1){
+            placeSingleNote(current_note);
         }
 
-        if(octave==8){
-            if(Arrays.asList(TOP_E_NOTE_NAMES).contains(note+Integer.toString(octave))){
-                return note+Integer.toString(octave);
-            }
 
-            octave-=1;
-            return note+Integer.toString(octave);
-        } else if (octave>8) {
-            octave-=1;
-            return checkIfInRange(note,octave);
-        }
-        return null;
+
     }
 
+    public void placeSingleNote(Note note){
+        boolean note_array[];//initialise array to show if a note can be played (from bottom E to top E)
+        note_array = findFretLocations(note);//find possible fret locations
+        //no need to check if string is empty as it is the only note being placed
+        placeNote(note_array, note.full_note_name, (int)note.tick);//place the note according to which notes are free
+    }
 
-    public void printTab() {
-        printGuitarString(this.bottomE, 96);
-        printGuitarString(this.aString,96);
-        printGuitarString(this.dString,96);
-        printGuitarString(this.gString,96);
-        printGuitarString(this.bString,96);
-        printGuitarString(this.topE,96);
+    public void placeNotes(ArrayList<Note> notes) throws Exception {
+        //check if each note is in range
+        boolean[][] note_matrix = new boolean[6][];
+        int counter = 0;
+        for (Note note:notes) {
+            note = checkIfInRange(note);
+            note_matrix[counter++] = findFretLocations(note);
+        }
+        //check if there can be placement without clashes
+        //resolve any clashes
+        //place notes
+        for (int i=0;i<notes.size();i++){//for each note
+            int true_count = 0;
+            for(int j=0; j<6;j++){//for each string
+               if(note_matrix[i][j]==true){
+                   true_count++;
+               }
+            }
+            //if count ==1
+            //set note
+            if(true_count==1){
+                int note_index = 0;
+                while(true){
+                    if(note_matrix[i][note_index]==true){
+                        break;
+                    }else if(note_index>5){
+                        throw new Exception();
+                    }
+                    note_index++;
+                }
+                note_matrix = Set(note_matrix,i+1, notes.size(), note_index);
+            }
+            //if count == 0
+            //shift
+            if(true_count==0){
+                Note temp = notes.get(i);
+                temp.setNote_octave(temp.note_octave+1);
+                notes.set(i,temp);
+                placeNotes(notes);
+            }
+        }
+        for(int i=0;i< notes.size();i++){
+            System.out.println(notes.get(i).full_note_name);
+            placeNote(note_matrix[i],notes.get(i).full_note_name,(int)notes.get(i).tick);
+
+        }
+        System.out.println();
+
+    }
+
+    public static boolean[][] Set(boolean note_matrix[][],int start_index, int end_index, int string_index){
+        for(int i = start_index;i<end_index;i++){
+            note_matrix[start_index++][string_index]=false;
+        }
+        return note_matrix;
+    }
+
+    public static Note shiftNote(Note note, int shift){
+        note.setNote_octave(note.note_octave+shift);
+        return note;
+    }
+
+    public static boolean[] findFretLocations(Note note){
+        boolean bottom_e = false;
+        boolean a_string = false;
+        boolean d_string = false;
+        boolean g_string = false;
+        boolean b_string = false;
+        boolean top_e = false;
+        int count = 0;
+
+        Note in_range = checkIfInRange(note);
+        if(in_range!=null){
+            note = in_range;
+        }
+
+        if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(note.full_note_name)){
+            bottom_e=true;
+            count++;
+        }
+        if(Arrays.asList(A_STRING_NOTE_NAMES).contains(note.full_note_name)){
+            a_string=true;
+            count++;
+        }
+        if(Arrays.asList(D_STRING_NOTE_NAMES).contains(note.full_note_name)){
+            d_string=true;
+            count++;
+        }
+        if(Arrays.asList(G_STRING_NOTE_NAMES).contains(note.full_note_name)){
+            g_string=true;
+            count++;
+        }
+        if(Arrays.asList(B_STRING_NOTE_NAMES).contains(note.full_note_name)){
+            b_string=true;
+            count++;
+        }
+        if(Arrays.asList(TOP_E_NOTE_NAMES).contains(note.full_note_name)){
+            top_e=true;
+            count++;
+        }
+
+
+        return new boolean[]{bottom_e, a_string, d_string, g_string, b_string, top_e};
+    }
+
+    boolean[] checkIfEmpty(boolean[] note_array, int tick){
+        int counter = 0;
+        for (int[] string: all_strings) {
+            if(note_array[counter]==true&&string[tick]!=-1){
+                note_array[counter]=false;
+            }
+            counter++;
+        }
+
+        return note_array;
+    }
+
+    public void placeNote(boolean[] bool_notes, String note, int tick){
+        Random rand = new Random();
+        while(true){
+            int i = rand.nextInt(0,6);
+            if(bool_notes[i]){
+                //need to check if string is empty or not
+                switch (i) {
+                    case (0) -> this.bottomE[tick] = Arrays.asList(BOTTOM_E_NOTE_NAMES).indexOf(note);
+                    case (1) -> this.aString[tick] = Arrays.asList(A_STRING_NOTE_NAMES).indexOf(note);
+                    case (2) -> this.dString[tick] = Arrays.asList(D_STRING_NOTE_NAMES).indexOf(note);
+                    case (3) -> this.gString[tick] = Arrays.asList(G_STRING_NOTE_NAMES).indexOf(note);
+                    case (4) -> this.bString[tick] = Arrays.asList(B_STRING_NOTE_NAMES).indexOf(note);
+                    case (5) -> this.topE[tick] = Arrays.asList(TOP_E_NOTE_NAMES).indexOf(note);
+                }
+
+                break;
+            }
+        }
+    }
+
+    public static Note checkIfInRange(Note note){
+
+        if(note.note_octave==4){//check if note is in lowest possible octave
+            if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(note.full_note_name)){ //check if note is in the Bottom E array
+                return note; //return string if present
+            }
+
+            note.setNote_octave(note.note_octave+1); //increment by an octave if not present
+            return note; //return new note
+
+        } else if (note.note_octave<4) {//if octave is less than 4 increment the octave and try the algorithm again recursivley
+            note.setNote_octave(note.note_octave+1);
+            return checkIfInRange(note);
+        }
+
+        if(note.note_octave==8){
+            if(Arrays.asList(TOP_E_NOTE_NAMES).contains(note.full_note_name)){
+                return note;
+            }
+
+            note.setNote_octave(note.note_octave-1);
+            return note;
+        } else if (note.note_octave>8) {
+            note.setNote_octave(note.note_octave-1);
+            return note;
+        }
+        return note;
+    }
+
+    public void printTab(int resolution) {
+        printGuitarString(this.topE,resolution);
+        printGuitarString(this.bString,resolution);
+        printGuitarString(this.gString,resolution);
+        printGuitarString(this.dString,resolution);
+        printGuitarString(this.aString,resolution);
+        printGuitarString(this.bottomE, resolution);
     }
 
     public void printGuitarString(int[] guitarString, int resolution){
@@ -126,7 +282,7 @@ public class GuitarTab {
     }
 
     public static void main(String[] args){
-        System.out.println(GuitarTab.checkIfInRange("G",19));
+        //System.out.println(GuitarTab.checkIfInRange("G",19));
 
     }
 
