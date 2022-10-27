@@ -16,19 +16,13 @@ public class GuitarTab {
 
     //notes
 
-    //public static final String[] BOTTOM_E_NOTE_NAMES = {"E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6"};
-    //public static final String[] A_STRING_NOTE_NAMES = {"A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6","F6","F#6","G6","G#6","A6"};
-    //public static final String[] D_STRING_NOTE_NAMES = {"D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6","C7","C#7","D7"};
-    //public static final String[] G_STRING_NOTE_NAMES = {"G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6","C7","C#7","D7","D#7","E7","F7","F#7","G7"};
-    //public static final String[] B_STRING_NOTE_NAMES = {"B5","C6", "C#6", "D6", "D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6","C7","C#7","D7","D#7","E7","F7","F#7","G7","G#7","A7","A#7","B7"};
-    //public static final String[] TOP_E_NOTE_NAMES = {"E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6","C7", "C#7", "D7", "D#7","E7", "F7", "F#7", "G7", "G#7", "A7", "A#7", "B7","C8", "C#8", "D8", "D#8","E8"};
+    public static final String[] BOTTOM_E_NOTE_NAMES = {"E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5"};
+    public static final String[] A_STRING_NOTE_NAMES = {"A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5"};
+    public static final String[] D_STRING_NOTE_NAMES = {"D4", "D#4","E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6"};
+    public static final String[] G_STRING_NOTE_NAMES = {"G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6"};
+    public static final String[] B_STRING_NOTE_NAMES = {"B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6"};
+    public static final String[] TOP_E_NOTE_NAMES = {"E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6","C7", "C#7", "D7", "D#7","E7"};
 
-    public static final String[] BOTTOM_E_NOTE_NAMES = {"E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2","C3", "C#3", "D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4"};
-    public static final String[] A_STRING_NOTE_NAMES = {"A4", "A#4", "B4","C3", "C#3", "D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4"};
-    public static final String[] D_STRING_NOTE_NAMES = {"D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5"};
-    public static final String[] G_STRING_NOTE_NAMES = {"G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5"};
-    public static final String[] B_STRING_NOTE_NAMES = {"B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5"};
-    public static final String[] TOP_E_NOTE_NAMES = {"E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C8", "C#6", "D6", "D#6","E6"};
 
     public GuitarTab(int numTicks) {
         this.bottomE = new int[numTicks];
@@ -49,187 +43,65 @@ public class GuitarTab {
         all_strings = new int[][]{bottomE, aString, dString, gString, bString, topE};
 
     }
+    ///////////////////
 
     public void generateTab(ArrayList<Note> notes){
-        while(true){//REMOVE THIS EVENTUALLY
-            int count = 0;
-            Note previous_note = null;
-            Note current_note = null;
-            ArrayList<Note> simultanious_notes = new ArrayList<>();
-            for(int i = 0; i<notes.size();i++) {
-                //if single note call place note
-                current_note = notes.get(i);
-                if(previous_note==null||previous_note.tick==current_note.tick){
-                    simultanious_notes.add(current_note);
+        int last_tick = -1;
+        ArrayList<Note> simultaneousNotes = new ArrayList<>();
+        for (Note note:notes) {
+            if(note.tick!=last_tick){
+                simultaneousNotes = getSimultaneousNotes((int)note.tick,notes);
+                if(simultaneousNotes.size()==1){
+                    placeSingleNote(simultaneousNotes.get(0));
+                }else{
+                    configureChord(simultaneousNotes);
                 }
-                else{
-                    if (simultanious_notes.size()==1){
-                        placeSingleNote(previous_note);
-                    }else{
-                        try {
-                            boolean[][] note_matrix = configureNotes(simultanious_notes);
-                            //place notes
-                            placeMultipleNotes(note_matrix,simultanious_notes);
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        simultanious_notes.clear();
-                        simultanious_notes.add(current_note);
-                    }
-                }
-
-                previous_note = current_note;
-                if(i==notes.size()-1){
-                    try {
-                        boolean[][] note_matrix = configureNotes(simultanious_notes);
-                        //place notes
-                        placeMultipleNotes(note_matrix,simultanious_notes);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            if(simultanious_notes.size()==1){
-                placeSingleNote(current_note);
-            }
-            if(janky_checks(notes.size())){//REMOVE THIS EVENTUALLY
-                break;
             }
 
         }
-
-
     }
 
-    public void placeMultipleNotes(boolean note_matrix[][], ArrayList<Note> notes){
+    public ArrayList<Note> getSimultaneousNotes(int tick,ArrayList<Note> notes){
+        ArrayList<Note> simultaneousNotes = new ArrayList<>();
+        for (Note note:notes) {
+            if(note.tick==tick){
+                simultaneousNotes.add(note);
+            }
+        }
+        return simultaneousNotes;
+    }
+
+    public static void configureChord(ArrayList<Note> notes){//currently working on the assumption that all notes are in range and only up to six notes played at once
+
+        boolean[][] note_matrix = new boolean[6][];//matrix of boolean values displaying whether it is possible to play the note or not on the string
+
+        //assigning true or false values for whether a note can be played on a given string
         int counter = 0;
         for (Note note:notes) {
-            placeNote(note_matrix[counter++],note.full_note_name,(int)note.tick);//this can be refactored
+            note_matrix[counter++]=findFretLocations(note);
         }
+        System.out.println();
+
+        //working out the configuration of notes so they can all be played simultaneously
+
+        //do until each array in note matrix only has 1 true value
+            //select array with lowes true_count // if draw latest
+                //if true_count==1
+                    //set
+                //else
+                    //pick one at random
+                    //set all others to false
+                    //set
     }
 
+    public boolean[][] set(boolean[][] note_matrix){
+        return note_matrix;
+    }
     public void placeSingleNote(Note note){
         boolean note_array[];//initialise array to show if a note can be played (from bottom E to top E)
         note_array = findFretLocations(note);//find possible fret locations
         //no need to check if string is empty as it is the only note being placed
-        placeNote(note_array, note.full_note_name, (int)note.tick);//place the note according to which notes are free
-    }
-
-    public boolean[][] configureNotes(ArrayList<Note> notes) throws Exception {//needs refining atm correct tabs print because of a check to see if all notes have been placed. needs a more elegant solution
-        //check if each note is in range
-        boolean[][] note_matrix = new boolean[6][];
-        int counter = 0;
-        for (Note note:notes) {
-            note = checkIfInRange(note);
-            note_matrix[counter++] = findFretLocations(note);
-        }
-        //check if there can be placement without clashes
-        //resolve any clashes
-        //place notes
-        for (int i=0;i<notes.size();i++){//for each note
-            int true_count = 0;
-            for(int j=0; j<6;j++){//for each string
-               if(note_matrix[i][j]==true){
-                   true_count++;
-               }
-            }
-            //if count ==1
-            //set note
-            if(true_count==1){
-                int note_index = 0;
-                while(true){
-                    if(note_matrix[i][note_index]==true){
-                        break;
-                    }else if(note_index>5){
-                        throw new Exception();
-                    }
-                    note_index++;
-                }
-                note_matrix = Set(note_matrix,i+1, notes.size(), note_index);
-                note_matrix = Set(note_matrix,0, i, note_index);
-            }
-            //if count == 0
-            //shift
-            if(true_count==0){
-                while (true){
-                    notes.get(i).setNote_octave(notes.get(i).note_octave+1);
-                    //check to see if string has been used already
-                    boolean[] temp_frets = findFretLocations(notes.get(i));
-
-                    for(int y = 0; y<i;y++){
-                        for(int x = 0; x<6;x++){
-                            if(note_matrix[y][x]==true){
-                                temp_frets[x]=false;
-                            }
-                        }
-                    }
-                    int temp_true_count=0;
-                    for (Boolean bool:temp_frets) {
-                        if(bool==true){
-                            temp_true_count++;
-                        }
-                    }
-                    if(temp_true_count==1){
-                        int note_index = 0;
-                        while(true){
-                            if(temp_frets[note_index]==true){
-                                note_matrix[i] = temp_frets;
-                                break;
-                            }else if(note_index>5){
-                                throw new Exception();
-                            }
-                            note_index++;
-                        }
-
-                        note_matrix = Set(note_matrix,i+1, notes.size(), note_index);
-                        note_matrix = Set(note_matrix,0, i, note_index);
-
-                        break;
-                    } else if (temp_true_count>1) {
-                        note_matrix[i] = temp_frets;
-                        break;
-                    }
-
-                }
-            }
-
-        }
-        return note_matrix;
-
-    }
-
-    boolean janky_checks(int note_count){
-        int total = note_counter(bottomE)+note_counter(aString)+note_counter(dString)+note_counter(gString)+note_counter(bString)+note_counter(topE);
-        if(note_count==total){
-            return true;
-        }
-        return false;
-    }
-    int note_counter(int[] string){
-        int counter = 0;
-        for (int note: string) {
-            if(note!=-1){
-                counter++;
-            }
-        }
-        return counter;
-    }
-
-
-    /////////////////////
-    public static boolean[][] Set(boolean note_matrix[][],int start_index, int end_index, int string_index){
-        for(int i = start_index;i<end_index;i++){
-            note_matrix[i][string_index]=false;
-        }
-
-        return note_matrix;
-    }
-
-    public static Note shiftNote(Note note, int shift){
-        note.setNote_octave(note.note_octave+shift);
-        return note;
+        randomlyPlaceNote(note_array, note.full_note_name, (int)note.tick);//place the note according to which notes are free
     }
 
     public static boolean[] findFretLocations(Note note){
@@ -241,10 +113,7 @@ public class GuitarTab {
         boolean top_e = false;
         int count = 0;
 
-        Note in_range = checkIfInRange(note);
-        if(in_range!=null){
-            note = in_range;
-        }
+
 
         if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(note.full_note_name)){
             bottom_e=true;
@@ -275,20 +144,11 @@ public class GuitarTab {
         return new boolean[]{bottom_e, a_string, d_string, g_string, b_string, top_e};
     }
 
-    boolean[] checkIfEmpty(boolean[] note_array, int tick){
-        int counter = 0;
-        for (int[] string: all_strings) {
-            if(note_array[counter]==true&&string[tick]!=-1){
-                note_array[counter]=false;
-            }
-            counter++;
-        }
-
-        return note_array;
-    }
-
-    public void placeNote(boolean[] bool_notes, String note, int tick){
+    public void randomlyPlaceNote(boolean[] bool_notes, String note, int tick){
         Random rand = new Random();
+
+        checkIfPlayable(bool_notes);
+
         while(true){
             int i = rand.nextInt(0,6);
             if(bool_notes[i]){
@@ -306,36 +166,7 @@ public class GuitarTab {
             }
         }
     }
-
-    public static Note checkIfInRange(Note note){
-
-        if(note.note_octave==4){//check if note is in lowest possible octave
-            if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(note.full_note_name)){ //check if note is in the Bottom E array
-                return note; //return string if present
-            }
-
-            note.setNote_octave(note.note_octave+1); //increment by an octave if not present
-            return note; //return new note
-
-        } else if (note.note_octave<4) {//if octave is less than 4 increment the octave and try the algorithm again recursivley
-            note.setNote_octave(note.note_octave+1);
-            return checkIfInRange(note);
-        }
-
-        if(note.note_octave==8){
-            if(Arrays.asList(TOP_E_NOTE_NAMES).contains(note.full_note_name)){
-                return note;
-            }
-
-            note.setNote_octave(note.note_octave-1);
-            return note;
-        } else if (note.note_octave>8) {
-            note.setNote_octave(note.note_octave-1);
-            return note;
-        }
-        return note;
-    }
-
+    ///////////////////
     public void printTab(int resolution) {
         printGuitarString(this.topE,resolution);
         printGuitarString(this.bString,resolution);
@@ -359,6 +190,17 @@ public class GuitarTab {
             }
         }
         System.out.println("");
+    }
+
+    public boolean checkIfPlayable(boolean[] note_array){//A function to check if there is a place for the note to be played
+        if(note_array==new boolean[]{false,false,false,false,false,false}){
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return true;
     }
 
     public static void main(String[] args){
