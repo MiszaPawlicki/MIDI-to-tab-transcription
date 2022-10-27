@@ -87,15 +87,19 @@ public class MidiFileReader {
     }
     public static void main(String[] args) throws Exception{
         //String path = "chords.mid";
-        String path = "project_test_midi.mid";
+        //String path = "project_test_midi.mid";
+        String path = "ss-01.mid";
         MidiFileReader midiFileReader = new MidiFileReader(path);
 
         for (Note n: notes) {
             System.out.println("NOTE: "+n.full_note_name+ " - TICK: "+n.tick);
         }
+
         GuitarTab guitarTab = new GuitarTab((int)tick_length);
         guitarTab.generateTab(notes);
         guitarTab.printTab(resolution);
+
+
     }
 
 }
