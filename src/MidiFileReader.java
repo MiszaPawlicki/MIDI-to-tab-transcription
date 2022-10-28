@@ -36,19 +36,6 @@ public class MidiFileReader {
             for(int i=0; i<track.size();i++){
                 MidiEvent event = track.get(i);
 
-                /*
-                strings from e6 to e4
-
-                full range e4 to d8
-
-                algo for string decision:
-
-                shift entire track up if falling below, down if ahead. and then if there are isolated incidences of notes out of range,
-                bring back to original note
-
-
-
-                 */
 
                 MidiMessage message = event.getMessage();
                 if(message instanceof ShortMessage){
@@ -86,7 +73,7 @@ public class MidiFileReader {
         return sequence.getResolution();
     }
     public static void main(String[] args) throws Exception{
-        String path = "handel.mid";
+        String path = "new.mid";
 
         MidiFileReader midiFileReader = new MidiFileReader(path);
 
