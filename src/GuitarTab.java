@@ -55,7 +55,10 @@ public class GuitarTab {
                 if(simultaneousNotes.size()==1){
                     placeSingleNote(simultaneousNotes.get(0));
                 }else{
-                    configureChord(simultaneousNotes);
+                    boolean[][] note_matrix = configureChord(simultaneousNotes);
+                    for(int i = 0; i<note_matrix.length;i++){
+                        randomlyPlaceNote(note_matrix[i],simultaneousNotes.get(i).full_note_name,(int)simultaneousNotes.get(i).tick);//fix this ultimately to not randomly place
+                    }
                 }
                 last_tick = (int)note.tick;
             }
@@ -73,7 +76,7 @@ public class GuitarTab {
         return simultaneousNotes;
     }
 
-    public static void configureChord(ArrayList<Note> notes){//currently working on the assumption that all notes are in range and only up to six notes played at once
+    public static boolean[][] configureChord(ArrayList<Note> notes){//currently working on the assumption that all notes are in range and only up to six notes played at once
         //create boolean array of size [number of notes][6]
         boolean[][] note_matrix = new boolean[notes.size()][6];
         for(int i = 0; i<note_matrix.length;i++){
@@ -91,8 +94,7 @@ public class GuitarTab {
             set_chord_list.add(lowest_count_index);
 
         }
-
-
+        return note_matrix;
     }
 
 
@@ -242,6 +244,10 @@ public class GuitarTab {
                 break;
             }
         }
+    }
+
+    public void placeNote(boolean[] bool_notes, String note, int tick){
+
     }
     ///////////////////
     public void printTab(int resolution) {

@@ -86,7 +86,7 @@ public class MidiFileReader {
         return sequence.getResolution();
     }
     public static void main(String[] args) throws Exception{
-        String path = "new.mid";
+        String path = "handel.mid";
 
         MidiFileReader midiFileReader = new MidiFileReader(path);
 
@@ -96,6 +96,7 @@ public class MidiFileReader {
 
         GuitarTab guitarTab = new GuitarTab((int)tick_length);
         guitarTab.generateTab(notes);
+        guitarTab.printTab(resolution);
 
 
     }
