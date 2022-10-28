@@ -51,11 +51,13 @@ public class GuitarTab {
         for (Note note:notes) {
             if(note.tick!=last_tick){
                 simultaneousNotes = getSimultaneousNotes((int)note.tick,notes);
+
                 if(simultaneousNotes.size()==1){
                     placeSingleNote(simultaneousNotes.get(0));
                 }else{
                     configureChord(simultaneousNotes);
                 }
+                last_tick = (int)note.tick;
             }
 
         }
@@ -72,29 +74,104 @@ public class GuitarTab {
     }
 
     public static void configureChord(ArrayList<Note> notes){//currently working on the assumption that all notes are in range and only up to six notes played at once
-
-        boolean[][] note_matrix = new boolean[6][];//matrix of boolean values displaying whether it is possible to play the note or not on the string
-
-        //assigning true or false values for whether a note can be played on a given string
-        int counter = 0;
-        for (Note note:notes) {
-            note_matrix[counter++]=findFretLocations(note);
+        //create boolean array of size [number of notes][6]
+        boolean[][] note_matrix = new boolean[notes.size()][6];
+        for(int i = 0; i<note_matrix.length;i++){
+            note_matrix[i] = findFretLocations(notes.get(i));
         }
-        System.out.println();
-
-        //working out the configuration of notes so they can all be played simultaneously
-
-        //do until each array in note matrix only has 1 true value
+        ArrayList<Integer> set_chord_list = new ArrayList<>();
+        while(!checkMatrix(note_matrix)){//do until each array in note matrix only has 1 true value
             //select array with lowes true_count // if draw latest
-                //if true_count==1
-                    //set
-                //else
-                    //pick one at random
-                    //set all others to false
-                    //set
+            int lowest_count_index = lowestTrueCount(note_matrix, set_chord_list);
+
+            int random_index = pickRandomIndex(note_matrix[lowest_count_index]);
+            //set all others to false
+            set(note_matrix,random_index,lowest_count_index);
+            //add index of set note to list
+            set_chord_list.add(lowest_count_index);
+
+        }
+
+
     }
 
-    public boolean[][] set(boolean[][] note_matrix){
+
+    static boolean checkMatrix(boolean[][] note_matrix){//function to see if each array in the matrix has a true count of one true_count is 1 for each note, returns true
+        for (boolean[] string_array:note_matrix) {
+            int true_count = 0;
+            for (boolean string:string_array) {
+                if (string){
+                    true_count++;
+                    if(true_count>1){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    static int lowestTrueCount(boolean[][] note_matrix, ArrayList<Integer> set_chord_list){//loop through the matrix and return the note with the lowest true count
+        int lowest_count_index = 0;
+        int lowest_count = 7; //set to 7 as any true count will be lower as there are only six strings
+        int true_count = 0;
+        int index_counter = 0;
+        for (boolean[] string_array:note_matrix) {
+            if((!set_chord_list.contains(index_counter))){
+                true_count = 0;
+                for(int i=0; i<=5;i++){
+                    if(string_array[i]){
+                        true_count++;
+                    }
+                }
+                if(true_count<lowest_count){
+                    lowest_count=true_count;
+                    lowest_count_index=index_counter;
+                }
+            }
+
+            index_counter++;
+        }
+
+
+        return lowest_count_index;
+    }
+
+    static int pickRandomIndex(boolean[] string_array){//select random index from playable notes
+        int bound;
+        int random_index;
+        ArrayList<Integer> true_index_list = new ArrayList<>();
+
+        for(int i = 0; i<=5;i++){
+            if(string_array[i]){
+                true_index_list.add(i);
+            }
+        }
+
+        Random random = new Random();
+        random_index = random.nextInt(true_index_list.size());
+
+        return true_index_list.get(random_index);
+    }
+
+    public static boolean[][] set(boolean[][] note_matrix,int string_index, int note_index){//string index - index of the string being set, note index - index of the note being set
+        /////FUNCTION TO SET ALL NOTES BUT ONE TO TRUE OF A CERTAIN STRING VALUE // need to alter to set the string itself.
+        for(int i=0; i<note_matrix.length;i++){
+            if(i!=note_index){
+                for(int j=0; j<=5;j++){
+                    if(j==string_index){
+                        note_matrix[i][j]=false;
+                    }
+                }
+            }else{
+                for(int j=0; j<=5; j++){
+                    if(j!=string_index){
+                        note_matrix[i][j]=false;
+                    }
+                }
+            }
+
+        }
         return note_matrix;
     }
     public void placeSingleNote(Note note){
@@ -192,7 +269,7 @@ public class GuitarTab {
         System.out.println("");
     }
 
-    public boolean checkIfPlayable(boolean[] note_array){//A function to check if there is a place for the note to be played
+    public static boolean checkIfPlayable(boolean[] note_array){//A function to check if there is a place for the note to be played
         if(note_array==new boolean[]{false,false,false,false,false,false}){
             try {
                 throw new Exception();
