@@ -13,6 +13,7 @@ public class GuitarTab {
     public final int[][] all_strings;// = {bottomE,aString,dString,gString,bString,topE};
 
     protected int numTicks;
+    protected double fitness;
 
     //notes
 
@@ -42,7 +43,17 @@ public class GuitarTab {
         this.numTicks = numTicks;
         all_strings = new int[][]{bottomE, aString, dString, gString, bString, topE};
 
+        fitness = 0;
     }
+
+    public double getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(double fitness) {
+        this.fitness = fitness;
+    }
+
     ///////////////////
 
     public void generateTab(ArrayList<Note> notes){
