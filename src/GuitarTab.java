@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
-public class GuitarTab {
+public class GuitarTab implements Comparable<GuitarTab> {
     protected int[] bottomE;
     protected int[] aString;
     protected int[] dString;
@@ -77,7 +78,7 @@ public class GuitarTab {
         }
     }
 
-    public ArrayList<Note> getSimultaneousNotes(int tick,ArrayList<Note> notes){
+    public static ArrayList<Note> getSimultaneousNotes(int tick, ArrayList<Note> notes){
         ArrayList<Note> simultaneousNotes = new ArrayList<>();
         for (Note note:notes) {
             if(note.tick==tick){
@@ -302,4 +303,9 @@ public class GuitarTab {
 
     }
 
+
+    @Override
+    public int compareTo(GuitarTab o) {
+        return Double.compare(fitness,o.getFitness());
+    }
 }
