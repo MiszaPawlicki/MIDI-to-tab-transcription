@@ -2,17 +2,21 @@ import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 
 public class GeneticAlgorithm {
 
     private static GuitarTab[] population;
-    private static ArrayList<Float> generational_fitness;
+    private static ArrayList<Double> generational_fitness = new ArrayList<>();
     protected static MidiFileReader midiFileReader;
+
+    private static void readMidiFile(String path) throws InvalidMidiDataException, IOException {
+        midiFileReader = new MidiFileReader(path);
+    }
+
     private static void generatePopulation(int population_size, String path) throws InvalidMidiDataException, IOException {
 
-        midiFileReader = new MidiFileReader(path);//read midi file
+        readMidiFile(path);//read midi file
         population = new GuitarTab[population_size];
 
         for(int i = 0; i<population_size;i++){//generate a population of guitar tabs of size population_size
@@ -20,14 +24,11 @@ public class GeneticAlgorithm {
             guitarTab.generateTab(midiFileReader.notes);
             population[i] = guitarTab;
         }
-        int res = midiFileReader.resolution;
-        for (GuitarTab gt:population) {  ///PRINTING CODE
-            gt.printTab(res);
-            System.out.println();
-        }
+
+
     }
 
-    private static void calculateGenerationFitness(){
+    private static void calculateEachMemberFitness(){
         long current_tick = -1;
         int[] current_simultanious_notes = null;
         int[] previous_simultanious_notes = null;
@@ -107,7 +108,7 @@ public class GeneticAlgorithm {
         return total;
     }
 
-    private static void tournamentSelection(int num_selections){
+    private static ArrayList<Integer> tournamentSelection(int num_selections){
         Random random = new Random();
         ArrayList<Integer> index_of_fittest = new ArrayList<>();
 
@@ -130,17 +131,79 @@ public class GeneticAlgorithm {
             }
 
         }
+        return index_of_fittest;
+    }
+
+    static void reproduce(ArrayList<Integer> index_of_fittest){//for each 2 tabs selected in the tournament, swap the middle third to create new child tabs
+        int counter = 0;
+        GuitarTab[] new_population = new GuitarTab[population.length];
+        for (int n = 1; n<index_of_fittest.size();n+=2){
+            GuitarTab tab1 = population[index_of_fittest.get(n)];
+            GuitarTab tab2 = population[index_of_fittest.get(n-1)];
+
+            GuitarTab child_tab1 = tab1;
+            GuitarTab child_tab2 = tab2;
+
+            int third_length = tab1.bottomE.length/3;
+            //crossover
+            for(int i = third_length;i<third_length*2;i++){
+                child_tab1.bottomE[i] = tab2.bottomE[i];
+                child_tab1.aString[i] = tab2.aString[i];
+                child_tab1.dString[i] = tab2.dString[i];
+                child_tab1.gString[i] = tab2.gString[i];
+                child_tab1.bString[i] = tab2.bString[i];
+                child_tab1.topE[i] = tab2.topE[i];
+
+                child_tab2.bottomE[i] = tab1.bottomE[i];
+                child_tab2.aString[i] = tab1.aString[i];
+                child_tab2.dString[i] = tab1.dString[i];
+                child_tab2.gString[i] = tab1.gString[i];
+                child_tab2.bString[i] = tab1.bString[i];
+                child_tab2.topE[i] = tab1.topE[i];
+            }
+
+            new_population[counter++] = tab1;
+            new_population[counter++] = tab2;
+            new_population[counter++] = child_tab1;
+            new_population[counter++] = child_tab2;
+
+            //probably want to mutate here
+
+
+
+        }
+        population = new_population;
 
     }
 
-    void reproduce(){}
+    private static void calculateGenerationFitness(){
+        double total = 0;
+
+        for (GuitarTab guitarTab:population) {
+            total+=guitarTab.fitness;
+        }
+        total=total/population.length;
+        generational_fitness.add(total);
+    }
 
     void mutate(){}
 
     public static void main(String[] args) throws InvalidMidiDataException, IOException {
         generatePopulation(100,"new.mid");
-        calculateGenerationFitness();
-        tournamentSelection(50);
 
+        for(int i = 0; i<100;i++){
+            calculateEachMemberFitness();
+            ArrayList<Integer> indexes_of_fittest = tournamentSelection(50);
+            calculateGenerationFitness();
+            System.out.println(generational_fitness.get(i));
+            reproduce(indexes_of_fittest);
+        }
+
+
+        /*int res = midiFileReader.resolution;
+        for (GuitarTab gt:population) {  ///PRINTING CODE
+            gt.printTab(res);
+            System.out.println();
+        }*/
     }
 }
