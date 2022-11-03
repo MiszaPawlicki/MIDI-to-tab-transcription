@@ -298,6 +298,11 @@ public class GuitarTab implements Comparable<GuitarTab> {
         return true;
     }
 
+    public static boolean randomlyChangeNote(int stringIndex, int noteIndex){
+
+        return false;
+    }
+
     public static void main(String[] args){
         //System.out.println(GuitarTab.checkIfInRange("G",19));
 

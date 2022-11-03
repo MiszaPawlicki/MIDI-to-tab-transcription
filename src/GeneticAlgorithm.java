@@ -24,8 +24,6 @@ public class GeneticAlgorithm {
             guitarTab.generateTab(midiFileReader.notes);
             population[i] = guitarTab;
         }
-
-
     }
 
     private static void calculateEachMemberFitness(){
@@ -137,6 +135,8 @@ public class GeneticAlgorithm {
     static void reproduce(ArrayList<Integer> index_of_fittest){//for each 2 tabs selected in the tournament, swap the middle third to create new child tabs
         int counter = 0;
         GuitarTab[] new_population = new GuitarTab[population.length];
+        Random rand = new Random();
+
         for (int n = 1; n<index_of_fittest.size();n+=2){
             GuitarTab tab1 = population[index_of_fittest.get(n)];
             GuitarTab tab2 = population[index_of_fittest.get(n-1)];
@@ -162,18 +162,41 @@ public class GeneticAlgorithm {
                 child_tab2.topE[i] = tab1.topE[i];
             }
 
+            if(rand.nextInt(2)==1){
+                child_tab1 = mutate(child_tab1);
+            }else{
+                child_tab2 = mutate(child_tab2);
+            }
+
             new_population[counter++] = tab1;
             new_population[counter++] = tab2;
             new_population[counter++] = child_tab1;
             new_population[counter++] = child_tab2;
 
-            //probably want to mutate here
 
 
 
         }
         population = new_population;
 
+    }
+
+    public static GuitarTab mutate(GuitarTab child_tab){
+        Random random = new Random();
+        ArrayList<Integer> index_list = new ArrayList<>();
+        int[] string_array = getStringArray(random.nextInt(6),child_tab);//select a string at random
+        for(int i = 0; i<string_array.length;i++){
+            if(string_array[i]!=-1){//get index of all notes played on that string
+                index_list.add(i);
+            }
+        }
+        int random_string_index = random.nextInt(index_list.size());
+        int random_note_index = index_list.get(random_string_index);//select a note index at random
+
+
+        child_tab.randomlyChangeNote(random_string_index, random_note_index);
+
+        return child_tab;
     }
 
     private static void calculateGenerationFitness(){
@@ -186,12 +209,28 @@ public class GeneticAlgorithm {
         generational_fitness.add(total);
     }
 
-    void mutate(){}
+    private static int[] getStringArray(int index, GuitarTab tab){
+
+        if(index==0){
+            return tab.bottomE;
+        }else if(index == 1){
+            return tab.aString;
+        }else if(index == 2){
+            return tab.dString;
+        }else if(index == 3){
+            return tab.gString;
+        }else if(index == 4){
+            return tab.bString;
+        }else if(index == 5){
+            return tab.topE;
+        }
+        return null;
+    }
 
     public static void main(String[] args) throws InvalidMidiDataException, IOException {
         generatePopulation(100,"new.mid");
 
-        for(int i = 0; i<100;i++){
+        for(int i = 0; i<10;i++){
             calculateEachMemberFitness();
             ArrayList<Integer> indexes_of_fittest = tournamentSelection(50);
             calculateGenerationFitness();
