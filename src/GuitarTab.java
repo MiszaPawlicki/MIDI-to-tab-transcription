@@ -92,7 +92,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
         //create boolean array of size [number of notes][6]
         boolean[][] note_matrix = new boolean[notes.size()][6];
         for(int i = 0; i<note_matrix.length;i++){
-            note_matrix[i] = findFretLocations(notes.get(i));
+            note_matrix[i] = findFretLocations(notes.get(i).full_note_name);
         }
         ArrayList<Integer> set_chord_list = new ArrayList<>();
         while(!checkMatrix(note_matrix)){//do until each array in note matrix only has 1 true value
@@ -190,12 +190,12 @@ public class GuitarTab implements Comparable<GuitarTab> {
     }
     public void placeSingleNote(Note note){
         boolean note_array[];//initialise array to show if a note can be played (from bottom E to top E)
-        note_array = findFretLocations(note);//find possible fret locations
+        note_array = findFretLocations(note.full_note_name);//find possible fret locations
         //no need to check if string is empty as it is the only note being placed
         randomlyPlaceNote(note_array, note.full_note_name, (int)note.tick);//place the note according to which notes are free
     }
 
-    public static boolean[] findFretLocations(Note note){
+    public static boolean[] findFretLocations(String fullNoteName){
         boolean bottom_e = false;
         boolean a_string = false;
         boolean d_string = false;
@@ -206,27 +206,27 @@ public class GuitarTab implements Comparable<GuitarTab> {
 
 
 
-        if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(note.full_note_name)){
+        if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(fullNoteName)){
             bottom_e=true;
             count++;
         }
-        if(Arrays.asList(A_STRING_NOTE_NAMES).contains(note.full_note_name)){
+        if(Arrays.asList(A_STRING_NOTE_NAMES).contains(fullNoteName)){
             a_string=true;
             count++;
         }
-        if(Arrays.asList(D_STRING_NOTE_NAMES).contains(note.full_note_name)){
+        if(Arrays.asList(D_STRING_NOTE_NAMES).contains(fullNoteName)){
             d_string=true;
             count++;
         }
-        if(Arrays.asList(G_STRING_NOTE_NAMES).contains(note.full_note_name)){
+        if(Arrays.asList(G_STRING_NOTE_NAMES).contains(fullNoteName)){
             g_string=true;
             count++;
         }
-        if(Arrays.asList(B_STRING_NOTE_NAMES).contains(note.full_note_name)){
+        if(Arrays.asList(B_STRING_NOTE_NAMES).contains(fullNoteName)){
             b_string=true;
             count++;
         }
-        if(Arrays.asList(TOP_E_NOTE_NAMES).contains(note.full_note_name)){
+        if(Arrays.asList(TOP_E_NOTE_NAMES).contains(fullNoteName)){
             top_e=true;
             count++;
         }
@@ -298,8 +298,90 @@ public class GuitarTab implements Comparable<GuitarTab> {
         return true;
     }
 
-    public static boolean randomlyChangeNote(int stringIndex, int noteIndex){
+    public boolean randomlyChangeNote(int stringIndex, int noteIndex){
+        //get note name
+        int fretNumber;
+        String noteName = "";
+        switch (stringIndex){
+            case 0:
+                fretNumber = this.bottomE[noteIndex];
+                noteName = BOTTOM_E_NOTE_NAMES[fretNumber];
+                break;
+            case 1:
+                fretNumber = this.aString[noteIndex];
+                noteName = A_STRING_NOTE_NAMES[fretNumber];
+                break;
+            case 2:
+                fretNumber = this.dString[noteIndex];
+                noteName = D_STRING_NOTE_NAMES[fretNumber];
+                break;
+            case 3:
+                fretNumber = this.gString[noteIndex];
+                noteName = G_STRING_NOTE_NAMES[fretNumber];
+                break;
+            case 4:
+                fretNumber = this.bString[noteIndex];
+                noteName = B_STRING_NOTE_NAMES[fretNumber];
+                break;
+            case 5:
+                fretNumber = this.topE[noteIndex];
+                noteName = TOP_E_NOTE_NAMES[fretNumber];
+                break;
 
+        }
+
+        //check if playable elsewhere
+        boolean[] stringBoolean = findFretLocations(noteName);
+        int trueCount = 0;
+        for(boolean bool : stringBoolean){
+            if(bool){
+                trueCount++;
+            }
+        }
+        if(trueCount>1){
+            int[][] stringArray = {bottomE,aString,dString,gString,bString,topE};
+            int counter = 0;
+
+
+            for (int[] string: stringArray) {//for each string
+                if(string[noteIndex]!=-1){//checks to see if note played at given tick
+                    stringBoolean[counter]=false;
+                }
+                counter++;
+            }
+            trueCount = 0;
+            for(boolean bool : stringBoolean){
+                if(bool){
+                    trueCount++;
+                }
+            }
+            if(trueCount>0){
+                randomlyPlaceNote(stringBoolean,noteName,noteIndex);
+                switch (stringIndex){
+                    case 0:
+                        this.bottomE[noteIndex]=-1;
+                        break;
+                    case 1:
+                        this.aString[noteIndex]=-1;
+                        break;
+                    case 2:
+                        this.dString[noteIndex]=-1;
+                        break;
+                    case 3:
+                        this.gString[noteIndex]=-1;
+                        break;
+                    case 4:
+                        this.bString[noteIndex]=-1;
+                        break;
+                    case 5:
+                        this.topE[noteIndex]=-1;
+                        break;
+
+                }
+            }else{
+                return false;
+            }
+        }
         return false;
     }
 

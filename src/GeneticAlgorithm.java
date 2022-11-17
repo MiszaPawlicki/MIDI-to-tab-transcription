@@ -10,6 +10,10 @@ public class GeneticAlgorithm {
     private static ArrayList<Double> generational_fitness = new ArrayList<>();
     protected static MidiFileReader midiFileReader;
 
+    public static GuitarTab[] getPopulation() {
+        return population;
+    }
+
     private static void readMidiFile(String path) throws InvalidMidiDataException, IOException {
         midiFileReader = new MidiFileReader(path);
     }
@@ -162,18 +166,18 @@ public class GeneticAlgorithm {
                 child_tab2.topE[i] = tab1.topE[i];
             }
 
-            if(rand.nextInt(2)==1){
+            /*if(rand.nextInt(2)==1){
                 child_tab1 = mutate(child_tab1);
             }else{
                 child_tab2 = mutate(child_tab2);
-            }
+            }*/
 
             new_population[counter++] = tab1;
             new_population[counter++] = tab2;
             new_population[counter++] = child_tab1;
             new_population[counter++] = child_tab2;
 
-
+            //ERROR HERE FILLING POPULATION WITH THE SAME TABS
 
 
         }
@@ -184,17 +188,24 @@ public class GeneticAlgorithm {
     public static GuitarTab mutate(GuitarTab child_tab){
         Random random = new Random();
         ArrayList<Integer> index_list = new ArrayList<>();
-        int[] string_array = getStringArray(random.nextInt(6),child_tab);//select a string at random
+        //pick random string
+        int randomStringIndex=random.nextInt(6);
+        int[] string_array = getStringArray(randomStringIndex,child_tab);//select a string at random
+
+        //for each tick in the string add the tick number if the value is not -1
         for(int i = 0; i<string_array.length;i++){
             if(string_array[i]!=-1){//get index of all notes played on that string
                 index_list.add(i);
             }
         }
-        int random_string_index = random.nextInt(index_list.size());
-        int random_note_index = index_list.get(random_string_index);//select a note index at random
+        if(index_list.size()==0){
+            return child_tab;
+        }
 
+        int randomElement = random.nextInt(index_list.size());
+        int randomTick = index_list.get(randomElement);//select a note index at random
 
-        child_tab.randomlyChangeNote(random_string_index, random_note_index);
+        child_tab.randomlyChangeNote(randomStringIndex, randomTick);
 
         return child_tab;
     }
@@ -207,6 +218,7 @@ public class GeneticAlgorithm {
         }
         total=total/population.length;
         generational_fitness.add(total);
+        System.out.println(total);
     }
 
     private static int[] getStringArray(int index, GuitarTab tab){
@@ -228,15 +240,24 @@ public class GeneticAlgorithm {
     }
 
     public static void main(String[] args) throws InvalidMidiDataException, IOException {
-        generatePopulation(100,"new.mid");
 
-        for(int i = 0; i<10;i++){
+
+
+        generatePopulation(100,"new.mid");
+        GuitarTab[] bestPopulation = getPopulation();
+        for(int i = 0; i<500;i++){
             calculateEachMemberFitness();
             ArrayList<Integer> indexes_of_fittest = tournamentSelection(50);
             calculateGenerationFitness();
-            System.out.println(generational_fitness.get(i));
+            //System.out.println(generational_fitness.get(i));
+
             reproduce(indexes_of_fittest);
+            Arrays.sort(population);
+            System.out.println();
         }
+
+
+
 
 
         /*int res = midiFileReader.resolution;
@@ -246,3 +267,4 @@ public class GeneticAlgorithm {
         }*/
     }
 }
+
