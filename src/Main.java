@@ -11,7 +11,7 @@ public class Main {
             System.out.println("NOTE: "+n.full_note_name+ " - TICK: "+n.tick);
         }
 
-        GuitarTab guitarTab = new GuitarTab((int)midiFileReader.tick_length);
+        GuitarTab guitarTab = new GuitarTab((int)midiFileReader.tickLength);
         guitarTab.generateTab(midiFileReader.notes);
         guitarTab.printTab(midiFileReader.resolution);
     }

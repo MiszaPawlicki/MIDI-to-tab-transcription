@@ -1,9 +1,6 @@
-import org.w3c.dom.events.Event;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import javax.sound.midi.*;
 
 public class MidiFileReader {
@@ -12,14 +9,14 @@ public class MidiFileReader {
     public static final int NOTE_OFF = 0x80;//value for note off
     public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}; //all possible notes regardless of octave that can be played
     public static String path;
-    public static long tick_length;
+    public static long tickLength;
     public static int resolution;
     public static ArrayList<Note> notes;
 
     public MidiFileReader(String path) throws InvalidMidiDataException, IOException {
         this.path = path;
         this.resolution = getResolution(path);
-        this.tick_length = getTickLength(path);
+        this.tickLength = getTickLength(path);
         this.notes = readMidiFile(path);
     }
 
@@ -81,7 +78,7 @@ public class MidiFileReader {
             System.out.println("NOTE: "+n.full_note_name+ " - TICK: "+n.tick);
         }
 
-        GuitarTab guitarTab = new GuitarTab((int)tick_length);
+        GuitarTab guitarTab = new GuitarTab((int) tickLength);
         guitarTab.generateTab(notes);
         guitarTab.printTab(resolution);
 

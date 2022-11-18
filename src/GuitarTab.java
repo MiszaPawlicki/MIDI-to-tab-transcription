@@ -55,6 +55,54 @@ public class GuitarTab implements Comparable<GuitarTab> {
         this.fitness = fitness;
     }
 
+    public int[] getBottomE() {
+        return bottomE;
+    }
+
+    public void setBottomE(int[] bottomE) {
+        this.bottomE = bottomE;
+    }
+
+    public int[] getaString() {
+        return aString;
+    }
+
+    public void setaString(int[] aString) {
+        this.aString = aString;
+    }
+
+    public int[] getdString() {
+        return dString;
+    }
+
+    public void setdString(int[] dString) {
+        this.dString = dString;
+    }
+
+    public int[] getgString() {
+        return gString;
+    }
+
+    public void setgString(int[] gString) {
+        this.gString = gString;
+    }
+
+    public int[] getbString() {
+        return bString;
+    }
+
+    public void setbString(int[] bString) {
+        this.bString = bString;
+    }
+
+    public int[] getTopE() {
+        return topE;
+    }
+
+    public void setTopE(int[] topE) {
+        this.topE = topE;
+    }
+
     ///////////////////
 
     public void generateTab(ArrayList<Note> notes){

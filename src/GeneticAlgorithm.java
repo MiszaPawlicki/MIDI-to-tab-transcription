@@ -24,7 +24,7 @@ public class GeneticAlgorithm {
         population = new GuitarTab[population_size];
 
         for(int i = 0; i<population_size;i++){//generate a population of guitar tabs of size population_size
-            GuitarTab guitarTab = new GuitarTab((int)midiFileReader.tick_length);
+            GuitarTab guitarTab = new GuitarTab((int)midiFileReader.tickLength);
             guitarTab.generateTab(midiFileReader.notes);
             population[i] = guitarTab;
         }
@@ -142,47 +142,52 @@ public class GeneticAlgorithm {
         Random rand = new Random();
 
         for (int n = 1; n<index_of_fittest.size();n+=2){
-            GuitarTab tab1 = population[index_of_fittest.get(n)];
-            GuitarTab tab2 = population[index_of_fittest.get(n-1)];
+            int idx1 = n;
+            int idx2 = n-1;
+            GuitarTab tab1 = population[index_of_fittest.get(idx1)];
+            GuitarTab tab2 = population[index_of_fittest.get(idx2)];
 
-            GuitarTab child_tab1 = tab1;
-            GuitarTab child_tab2 = tab2;
+            GuitarTab child_tab1 = crossover(tab1,tab2);
+            GuitarTab child_tab2 = crossover(tab2,tab1);
 
-            int third_length = tab1.bottomE.length/3;
-            //crossover
-            for(int i = third_length;i<third_length*2;i++){
-                child_tab1.bottomE[i] = tab2.bottomE[i];
-                child_tab1.aString[i] = tab2.aString[i];
-                child_tab1.dString[i] = tab2.dString[i];
-                child_tab1.gString[i] = tab2.gString[i];
-                child_tab1.bString[i] = tab2.bString[i];
-                child_tab1.topE[i] = tab2.topE[i];
-
-                child_tab2.bottomE[i] = tab1.bottomE[i];
-                child_tab2.aString[i] = tab1.aString[i];
-                child_tab2.dString[i] = tab1.dString[i];
-                child_tab2.gString[i] = tab1.gString[i];
-                child_tab2.bString[i] = tab1.bString[i];
-                child_tab2.topE[i] = tab1.topE[i];
-            }
-
-            /*if(rand.nextInt(2)==1){
+            if(rand.nextInt(2)==1){
                 child_tab1 = mutate(child_tab1);
             }else{
                 child_tab2 = mutate(child_tab2);
-            }*/
+            }
+
 
             new_population[counter++] = tab1;
             new_population[counter++] = tab2;
             new_population[counter++] = child_tab1;
             new_population[counter++] = child_tab2;
-
-            //ERROR HERE FILLING POPULATION WITH THE SAME TABS
-
-
         }
         population = new_population;
 
+    }
+
+    static GuitarTab crossover(GuitarTab parent1,GuitarTab parent2){
+        GuitarTab childTab = new GuitarTab((int)midiFileReader.tickLength);
+
+        for(int i = 0; i<midiFileReader.tickLength/2;i++){
+            childTab.bottomE[i]=parent1.bottomE[i];
+            childTab.aString[i]=parent1.aString[i];
+            childTab.dString[i]=parent1.dString[i];
+            childTab.gString[i]=parent1.gString[i];
+            childTab.bString[i]=parent1.bString[i];
+            childTab.topE[i]=parent1.topE[i];
+
+        }
+        for(int i = (int)midiFileReader.tickLength/2; i<midiFileReader.tickLength;i++){
+            childTab.bottomE[i]=parent2.bottomE[i];
+            childTab.aString[i]=parent2.aString[i];
+            childTab.dString[i]=parent2.dString[i];
+            childTab.gString[i]=parent2.gString[i];
+            childTab.bString[i]=parent2.bString[i];
+            childTab.topE[i]=parent2.topE[i];
+
+        }
+        return childTab;
     }
 
     public static GuitarTab mutate(GuitarTab child_tab){
@@ -218,7 +223,7 @@ public class GeneticAlgorithm {
         }
         total=total/population.length;
         generational_fitness.add(total);
-        System.out.println(total);
+
     }
 
     private static int[] getStringArray(int index, GuitarTab tab){
@@ -249,16 +254,15 @@ public class GeneticAlgorithm {
             calculateEachMemberFitness();
             ArrayList<Integer> indexes_of_fittest = tournamentSelection(50);
             calculateGenerationFitness();
-            //System.out.println(generational_fitness.get(i));
+            System.out.println(generational_fitness.get(i));
 
             reproduce(indexes_of_fittest);
+            calculateEachMemberFitness();
             Arrays.sort(population);
-            System.out.println();
+
         }
 
-
-
-
+        System.out.println();
 
         /*int res = midiFileReader.resolution;
         for (GuitarTab gt:population) {  ///PRINTING CODE
