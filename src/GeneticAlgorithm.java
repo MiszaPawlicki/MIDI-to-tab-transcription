@@ -147,8 +147,8 @@ public class GeneticAlgorithm {
             GuitarTab tab1 = population[index_of_fittest.get(idx1)];
             GuitarTab tab2 = population[index_of_fittest.get(idx2)];
 
-            GuitarTab child_tab1 = crossover(tab1,tab2);
-            GuitarTab child_tab2 = crossover(tab2,tab1);
+            GuitarTab child_tab1 = crossover(tab1,tab2,0.5);
+            GuitarTab child_tab2 = crossover(tab2,tab1,0.5);
 
             if(rand.nextInt(2)==1){
                 child_tab1 = mutate(child_tab1);
@@ -166,10 +166,10 @@ public class GeneticAlgorithm {
 
     }
 
-    static GuitarTab crossover(GuitarTab parent1,GuitarTab parent2){
+    static GuitarTab crossover(GuitarTab parent1,GuitarTab parent2, double crossover){
         GuitarTab childTab = new GuitarTab((int)midiFileReader.tickLength);
 
-        for(int i = 0; i<midiFileReader.tickLength/2;i++){
+        for(int i = 0; i<midiFileReader.tickLength*crossover;i++){
             childTab.bottomE[i]=parent1.bottomE[i];
             childTab.aString[i]=parent1.aString[i];
             childTab.dString[i]=parent1.dString[i];
@@ -178,7 +178,7 @@ public class GeneticAlgorithm {
             childTab.topE[i]=parent1.topE[i];
 
         }
-        for(int i = (int)midiFileReader.tickLength/2; i<midiFileReader.tickLength;i++){
+        for(int i = (int) (midiFileReader.tickLength*crossover); i<midiFileReader.tickLength; i++){
             childTab.bottomE[i]=parent2.bottomE[i];
             childTab.aString[i]=parent2.aString[i];
             childTab.dString[i]=parent2.dString[i];
@@ -249,7 +249,7 @@ public class GeneticAlgorithm {
 
 
         generatePopulation(100,"new.mid");
-        GuitarTab[] bestPopulation = getPopulation();
+
         for(int i = 0; i<500;i++){
             calculateEachMemberFitness();
             ArrayList<Integer> indexes_of_fittest = tournamentSelection(50);
@@ -262,13 +262,8 @@ public class GeneticAlgorithm {
 
         }
 
-        System.out.println();
+        population[0].printTab(midiFileReader.resolution);
 
-        /*int res = midiFileReader.resolution;
-        for (GuitarTab gt:population) {  ///PRINTING CODE
-            gt.printTab(res);
-            System.out.println();
-        }*/
     }
 }
 
