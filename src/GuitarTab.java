@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Random;
 
 public class GuitarTab implements Comparable<GuitarTab> {
@@ -11,7 +10,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
     protected int[] bString;
     protected int[] topE;
 
-    public final int[][] all_strings;// = {bottomE,aString,dString,gString,bString,topE};
+    public final int[][] allStrings;// = {bottomE,aString,dString,gString,bString,topE};
 
     protected int numTicks;
     protected double fitness;
@@ -42,7 +41,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
         Arrays.fill(this.topE, -1);
 
         this.numTicks = numTicks;
-        all_strings = new int[][]{bottomE, aString, dString, gString, bString, topE};
+        allStrings = new int[][]{bottomE, aString, dString, gString, bString, topE};
 
         fitness = 0;
     }
@@ -55,53 +54,6 @@ public class GuitarTab implements Comparable<GuitarTab> {
         this.fitness = fitness;
     }
 
-    public int[] getBottomE() {
-        return bottomE;
-    }
-
-    public void setBottomE(int[] bottomE) {
-        this.bottomE = bottomE;
-    }
-
-    public int[] getaString() {
-        return aString;
-    }
-
-    public void setaString(int[] aString) {
-        this.aString = aString;
-    }
-
-    public int[] getdString() {
-        return dString;
-    }
-
-    public void setdString(int[] dString) {
-        this.dString = dString;
-    }
-
-    public int[] getgString() {
-        return gString;
-    }
-
-    public void setgString(int[] gString) {
-        this.gString = gString;
-    }
-
-    public int[] getbString() {
-        return bString;
-    }
-
-    public void setbString(int[] bString) {
-        this.bString = bString;
-    }
-
-    public int[] getTopE() {
-        return topE;
-    }
-
-    public void setTopE(int[] topE) {
-        this.topE = topE;
-    }
 
     ///////////////////
 
@@ -117,7 +69,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
                 }else{
                     boolean[][] note_matrix = configureChord(simultaneousNotes);
                     for(int i = 0; i<note_matrix.length;i++){
-                        randomlyPlaceNote(note_matrix[i],simultaneousNotes.get(i).full_note_name,(int)simultaneousNotes.get(i).tick);//fix this ultimately to not randomly place
+                        randomlyPlaceNote(note_matrix[i],simultaneousNotes.get(i).fullNoteName,(int)simultaneousNotes.get(i).tick);
                     }
                 }
                 last_tick = (int)note.tick;
@@ -138,23 +90,23 @@ public class GuitarTab implements Comparable<GuitarTab> {
 
     public static boolean[][] configureChord(ArrayList<Note> notes){//currently working on the assumption that all notes are in range and only up to six notes played at once
         //create boolean array of size [number of notes][6]
-        boolean[][] note_matrix = new boolean[notes.size()][6];
-        for(int i = 0; i<note_matrix.length;i++){
-            note_matrix[i] = findFretLocations(notes.get(i).full_note_name);
+        boolean[][] noteMatrix = new boolean[notes.size()][6];
+        for(int i = 0; i<noteMatrix.length;i++){
+            noteMatrix[i] = findFretLocations(notes.get(i).fullNoteName);
         }
-        ArrayList<Integer> set_chord_list = new ArrayList<>();
-        while(!checkMatrix(note_matrix)){//do until each array in note matrix only has 1 true value
+        ArrayList<Integer> setChordList = new ArrayList<>();
+        while(!checkMatrix(noteMatrix)){//do until each array in note matrix only has 1 true value
             //select array with lowes true_count // if draw latest
-            int lowest_count_index = lowestTrueCount(note_matrix, set_chord_list);
+            int lowestCountIndex = lowestTrueCount(noteMatrix, setChordList);
 
-            int random_index = pickRandomIndex(note_matrix[lowest_count_index]);
+            int random_index = pickRandomIndex(noteMatrix[lowestCountIndex]);
             //set all others to false
-            set(note_matrix,random_index,lowest_count_index);
+            set(noteMatrix,random_index,lowestCountIndex);
             //add index of set note to list
-            set_chord_list.add(lowest_count_index);
+            setChordList.add(lowestCountIndex);
 
         }
-        return note_matrix;
+        return noteMatrix;
     }
 
 
@@ -173,124 +125,124 @@ public class GuitarTab implements Comparable<GuitarTab> {
         return true;
     }
 
-    static int lowestTrueCount(boolean[][] note_matrix, ArrayList<Integer> set_chord_list){//loop through the matrix and return the note with the lowest true count
-        int lowest_count_index = 0;
-        int lowest_count = 7; //set to 7 as any true count will be lower as there are only six strings
-        int true_count = 0;
-        int index_counter = 0;
-        for (boolean[] string_array:note_matrix) {
-            if((!set_chord_list.contains(index_counter))){
-                true_count = 0;
+    static int lowestTrueCount(boolean[][] noteMatrix, ArrayList<Integer> setChordList){//loop through the matrix and return the note with the lowest true count
+        int lowestCountIndex = 0;
+        int lowestCount = 7; //set to 7 as any true count will be lower as there are only six strings
+        int trueCount = 0;
+        int indexCounter = 0;
+        for (boolean[] stringArray:noteMatrix) {
+            if((!setChordList.contains(indexCounter))){
+                trueCount = 0;
                 for(int i=0; i<=5;i++){
-                    if(string_array[i]){
-                        true_count++;
+                    if(stringArray[i]){
+                        trueCount++;
                     }
                 }
-                if(true_count<lowest_count){
-                    lowest_count=true_count;
-                    lowest_count_index=index_counter;
+                if(trueCount<lowestCount){
+                    lowestCount=trueCount;
+                    lowestCountIndex=indexCounter;
                 }
             }
 
-            index_counter++;
+            indexCounter++;
         }
 
 
-        return lowest_count_index;
+        return lowestCountIndex;
     }
 
-    static int pickRandomIndex(boolean[] string_array){//select random index from playable notes
+    static int pickRandomIndex(boolean[] stringArray){//select random index from playable notes
         int bound;
-        int random_index;
-        ArrayList<Integer> true_index_list = new ArrayList<>();
+        int randomIndex;
+        ArrayList<Integer> trueIndexList = new ArrayList<>();
 
         for(int i = 0; i<=5;i++){
-            if(string_array[i]){
-                true_index_list.add(i);
+            if(stringArray[i]){
+                trueIndexList.add(i);
             }
         }
 
         Random random = new Random();
-        random_index = random.nextInt(true_index_list.size());
+        randomIndex = random.nextInt(trueIndexList.size());
 
-        return true_index_list.get(random_index);
+        return trueIndexList.get(randomIndex);
     }
 
-    public static boolean[][] set(boolean[][] note_matrix,int string_index, int note_index){//string index - index of the string being set, note index - index of the note being set
+    public static boolean[][] set(boolean[][] noteMatrix,int stringIndex, int noteIndex){//string index - index of the string being set, note index - index of the note being set
         /////FUNCTION TO SET ALL NOTES BUT ONE TO TRUE OF A CERTAIN STRING VALUE // need to alter to set the string itself.
-        for(int i=0; i<note_matrix.length;i++){
-            if(i!=note_index){
+        for(int i=0; i<noteMatrix.length;i++){
+            if(i!=noteIndex){
                 for(int j=0; j<=5;j++){
-                    if(j==string_index){
-                        note_matrix[i][j]=false;
+                    if(j==stringIndex){
+                        noteMatrix[i][j]=false;
                     }
                 }
             }else{
                 for(int j=0; j<=5; j++){
-                    if(j!=string_index){
-                        note_matrix[i][j]=false;
+                    if(j!=stringIndex){
+                        noteMatrix[i][j]=false;
                     }
                 }
             }
 
         }
-        return note_matrix;
+        return noteMatrix;
     }
     public void placeSingleNote(Note note){
-        boolean note_array[];//initialise array to show if a note can be played (from bottom E to top E)
-        note_array = findFretLocations(note.full_note_name);//find possible fret locations
+        boolean noteArray[];//initialise array to show if a note can be played (from bottom E to top E)
+        noteArray = findFretLocations(note.fullNoteName);//find possible fret locations
         //no need to check if string is empty as it is the only note being placed
-        randomlyPlaceNote(note_array, note.full_note_name, (int)note.tick);//place the note according to which notes are free
+        randomlyPlaceNote(noteArray, note.fullNoteName, (int)note.tick);//place the note according to which notes are free
     }
 
     public static boolean[] findFretLocations(String fullNoteName){
-        boolean bottom_e = false;
-        boolean a_string = false;
-        boolean d_string = false;
-        boolean g_string = false;
-        boolean b_string = false;
-        boolean top_e = false;
+        boolean bottomE = false;
+        boolean aString = false;
+        boolean dString = false;
+        boolean gString = false;
+        boolean bString = false;
+        boolean topE = false;
         int count = 0;
 
 
 
         if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(fullNoteName)){
-            bottom_e=true;
+            bottomE=true;
             count++;
         }
         if(Arrays.asList(A_STRING_NOTE_NAMES).contains(fullNoteName)){
-            a_string=true;
+            aString=true;
             count++;
         }
         if(Arrays.asList(D_STRING_NOTE_NAMES).contains(fullNoteName)){
-            d_string=true;
+            dString=true;
             count++;
         }
         if(Arrays.asList(G_STRING_NOTE_NAMES).contains(fullNoteName)){
-            g_string=true;
+            gString=true;
             count++;
         }
         if(Arrays.asList(B_STRING_NOTE_NAMES).contains(fullNoteName)){
-            b_string=true;
+            bString=true;
             count++;
         }
         if(Arrays.asList(TOP_E_NOTE_NAMES).contains(fullNoteName)){
-            top_e=true;
+            topE=true;
             count++;
         }
 
 
-        return new boolean[]{bottom_e, a_string, d_string, g_string, b_string, top_e};
+        return new boolean[]{bottomE, aString, dString, gString, bString, topE};
     }
 
-    public void randomlyPlaceNote(boolean[] bool_notes, String note, int tick){
+    public void randomlyPlaceNote(boolean[] boolNotes, String note, int tick){
         Random rand = new Random();
 
-        checkIfPlayable(bool_notes);
+        checkIfPlayable(boolNotes);
 
         while(true){
             int i = rand.nextInt(0,6);
-            if(bool_notes[i]){
+            if(boolNotes[i]){
                 //need to check if string is empty or not
                 switch (i) {
                     case (0) -> this.bottomE[tick] = Arrays.asList(BOTTOM_E_NOTE_NAMES).indexOf(note);
@@ -306,9 +258,6 @@ public class GuitarTab implements Comparable<GuitarTab> {
         }
     }
 
-    public void placeNote(boolean[] bool_notes, String note, int tick){
-
-    }
     ///////////////////
     public void printTab(int resolution) {
         printGuitarString(this.topE,resolution);
@@ -335,8 +284,8 @@ public class GuitarTab implements Comparable<GuitarTab> {
         System.out.println("");
     }
 
-    public static boolean checkIfPlayable(boolean[] note_array){//A function to check if there is a place for the note to be played
-        if(note_array==new boolean[]{false,false,false,false,false,false}){
+    public static boolean checkIfPlayable(boolean[] noteArray){//A function to check if there is a place for the note to be played
+        if(noteArray==new boolean[]{false,false,false,false,false,false}){
             try {
                 throw new Exception();
             } catch (Exception e) {

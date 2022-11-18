@@ -75,7 +75,7 @@ public class MidiFileReader {
         MidiFileReader midiFileReader = new MidiFileReader(path);
 
         for (Note n: notes) {
-            System.out.println("NOTE: "+n.full_note_name+ " - TICK: "+n.tick);
+            System.out.println("NOTE: "+n.fullNoteName + " - TICK: "+n.tick);
         }
 
         GuitarTab guitarTab = new GuitarTab((int) tickLength);

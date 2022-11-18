@@ -18,12 +18,12 @@ public class GeneticAlgorithm {
         midiFileReader = new MidiFileReader(path);
     }
 
-    private static void generatePopulation(int population_size, String path) throws InvalidMidiDataException, IOException {
+    private static void generatePopulation(int populationSize, String path) throws InvalidMidiDataException, IOException {
 
         readMidiFile(path);//read midi file
-        population = new GuitarTab[population_size];
+        population = new GuitarTab[populationSize];
 
-        for(int i = 0; i<population_size;i++){//generate a population of guitar tabs of size population_size
+        for(int i = 0; i<populationSize;i++){//generate a population of guitar tabs of size population_size
             GuitarTab guitarTab = new GuitarTab((int)midiFileReader.tickLength);
             guitarTab.generateTab(midiFileReader.notes);
             population[i] = guitarTab;
@@ -31,62 +31,63 @@ public class GeneticAlgorithm {
     }
 
     private static void calculateEachMemberFitness(){
-        long current_tick = -1;
-        int[] current_simultanious_notes = null;
-        int[] previous_simultanious_notes = null;
-        double total_distance;
+        long currentTick = -1;
+        int[] currentSimultaneousNotes = null;
+        int[] previousSimultaneousNotes = null;
+
+        double totalDistance;
         double distance;
 
 
         for (GuitarTab guitarTab:population) {
-            total_distance = 0;
+            totalDistance = 0;
             for (Note note : midiFileReader.notes) {
-                if(note.tick!=current_tick){
-                    if(current_simultanious_notes==null){
-                        current_simultanious_notes = getSimultaniousNotes((int)note.tick, guitarTab);
-                        current_tick = note.tick;
+                if(note.tick!=currentTick){
+                    if(currentSimultaneousNotes==null){
+                        currentSimultaneousNotes = getSimultaneousNotes((int)note.tick, guitarTab);
+                        currentTick = note.tick;
                     }else{
-                        previous_simultanious_notes = current_simultanious_notes;
-                        current_simultanious_notes = getSimultaniousNotes((int)note.tick, guitarTab);
-                        distance = euclidianDistance(previous_simultanious_notes, current_simultanious_notes);
-                        total_distance+=distance;
+                        previousSimultaneousNotes = currentSimultaneousNotes;
+                        currentSimultaneousNotes = getSimultaneousNotes((int)note.tick, guitarTab);
+                        distance = euclidianDistance(previousSimultaneousNotes, currentSimultaneousNotes);
+                        totalDistance+=distance;
                     }
                 }
             }
-            guitarTab.setFitness(total_distance);
+            guitarTab.setFitness(totalDistance);
         }
 
         Arrays.sort(population);
 
     }
 
-    private static int[] getSimultaniousNotes(int tick, GuitarTab guitarTab){
-        int[] all_strings = {-1,-1,-1,-1,-1,-1};
+    private static int[] getSimultaneousNotes(int tick, GuitarTab guitarTab){
+        int[] allStrings = {-1,-1,-1,-1,-1,-1};
         if(guitarTab.bottomE[tick]!=-1){
-            all_strings[0] = guitarTab.bottomE[tick];
+            allStrings[0] = guitarTab.bottomE[tick];
         }
         if(guitarTab.aString[tick]!=-1){
-            all_strings[1] = guitarTab.aString[tick];
+            allStrings[1] = guitarTab.aString[tick];
         }
         if(guitarTab.dString[tick]!=-1){
-            all_strings[2] = guitarTab.dString[tick];
+            allStrings[2] = guitarTab.dString[tick];
         }
         if(guitarTab.gString[tick]!=-1){
-            all_strings[3] = guitarTab.gString[tick];
+            allStrings[3] = guitarTab.gString[tick];
         }
         if(guitarTab.bString[tick]!=-1){
-            all_strings[4] = guitarTab.bString[tick];
+            allStrings[4] = guitarTab.bString[tick];
         }
         if(guitarTab.topE[tick]!=-1){
-            all_strings[5] = guitarTab.topE[tick];
+            allStrings[5] = guitarTab.topE[tick];
         }
-        return all_strings;
+        return allStrings;
     }
 
     private static double euclidianDistance(int[] x, int[] y){//for single notes
 
-        int x_counter = 0;
-        int y_counter = 0;
+        int xCounter = 0;
+        int yCounter = 0;
 
         double total = 0;
 
@@ -98,71 +99,71 @@ public class GeneticAlgorithm {
                         int b = j+y[j];
                         double distance = Math.sqrt(Math.pow(a,2)+Math.pow(b,2));//x(string, fret), y(string, fret)///////i and y indicate string,
                         total+=distance;
-                        y_counter++;
+                        yCounter++;
                     }
                 }
-                x_counter++;
+                xCounter++;
             }
         }
-        int number_of_connections = x_counter+y_counter;
-        total = total/number_of_connections;
+        int numberOfConnections = xCounter+yCounter;
+        total = total/numberOfConnections;
         //divide total distance by number of connections
         return total;
     }
 
-    private static ArrayList<Integer> tournamentSelection(int num_selections){
+    private static ArrayList<Integer> tournamentSelection(int numSelections){
         Random random = new Random();
-        ArrayList<Integer> index_of_fittest = new ArrayList<>();
+        ArrayList<Integer> indexOfFittest = new ArrayList<>();
 
-        for(int i = 0; i< num_selections; i++){
-            int random_index_1;
-            int random_index_2;
+        for(int i = 0; i< numSelections; i++){
+            int randomIndex1;
+            int randomIndex2;
 
             while(true){
-                random_index_1 = random.nextInt(num_selections);
-                random_index_2 = random.nextInt(num_selections);
-                if(!(index_of_fittest.contains(random_index_1))&&!(index_of_fittest.contains(random_index_2))){
+                randomIndex1 = random.nextInt(numSelections);
+                randomIndex2 = random.nextInt(numSelections);
+                if(!(indexOfFittest.contains(randomIndex1))&&!(indexOfFittest.contains(randomIndex2))){
                     break;
                 }
             }
 
-            if(population[random_index_1].getFitness()>population[random_index_2].getFitness()){
-                index_of_fittest.add(random_index_1);
+            if(population[randomIndex1].getFitness()>population[randomIndex2].getFitness()){
+                indexOfFittest.add(randomIndex1);
             }else{
-                index_of_fittest.add(random_index_2);
+                indexOfFittest.add(randomIndex2);
             }
 
         }
-        return index_of_fittest;
+        return indexOfFittest;
     }
 
-    static void reproduce(ArrayList<Integer> index_of_fittest){//for each 2 tabs selected in the tournament, swap the middle third to create new child tabs
+    static void reproduce(ArrayList<Integer> indexOfFittest){//for each 2 tabs selected in the tournament, swap the middle third to create new child tabs
         int counter = 0;
-        GuitarTab[] new_population = new GuitarTab[population.length];
+        GuitarTab[] newPopulation = new GuitarTab[population.length];
         Random rand = new Random();
 
-        for (int n = 1; n<index_of_fittest.size();n+=2){
+        for (int n = 1; n<indexOfFittest.size();n+=2){
             int idx1 = n;
             int idx2 = n-1;
-            GuitarTab tab1 = population[index_of_fittest.get(idx1)];
-            GuitarTab tab2 = population[index_of_fittest.get(idx2)];
+            GuitarTab tab1 = population[indexOfFittest.get(idx1)];
+            GuitarTab tab2 = population[indexOfFittest.get(idx2)];
 
-            GuitarTab child_tab1 = crossover(tab1,tab2,0.5);
-            GuitarTab child_tab2 = crossover(tab2,tab1,0.5);
+            GuitarTab childTab1 = crossover(tab1,tab2,0.5);
+            GuitarTab childTab2 = crossover(tab2,tab1,0.5);
 
             if(rand.nextInt(2)==1){
-                child_tab1 = mutate(child_tab1);
+                childTab1 = mutate(childTab1);
             }else{
-                child_tab2 = mutate(child_tab2);
+                childTab2 = mutate(childTab2);
             }
 
 
-            new_population[counter++] = tab1;
-            new_population[counter++] = tab2;
-            new_population[counter++] = child_tab1;
-            new_population[counter++] = child_tab2;
+            newPopulation[counter++] = tab1;
+            newPopulation[counter++] = tab2;
+            newPopulation[counter++] = childTab1;
+            newPopulation[counter++] = childTab2;
         }
-        population = new_population;
+        population = newPopulation;
 
     }
 
@@ -190,29 +191,29 @@ public class GeneticAlgorithm {
         return childTab;
     }
 
-    public static GuitarTab mutate(GuitarTab child_tab){
+    public static GuitarTab mutate(GuitarTab guitarTab){
         Random random = new Random();
-        ArrayList<Integer> index_list = new ArrayList<>();
+        ArrayList<Integer> indexList = new ArrayList<>();
         //pick random string
         int randomStringIndex=random.nextInt(6);
-        int[] string_array = getStringArray(randomStringIndex,child_tab);//select a string at random
+        int[] string_array = getStringArray(randomStringIndex,guitarTab);//select a string at random
 
         //for each tick in the string add the tick number if the value is not -1
         for(int i = 0; i<string_array.length;i++){
             if(string_array[i]!=-1){//get index of all notes played on that string
-                index_list.add(i);
+                indexList.add(i);
             }
         }
-        if(index_list.size()==0){
-            return child_tab;
+        if(indexList.size()==0){
+            return guitarTab;
         }
 
-        int randomElement = random.nextInt(index_list.size());
-        int randomTick = index_list.get(randomElement);//select a note index at random
+        int randomElement = random.nextInt(indexList.size());
+        int randomTick = indexList.get(randomElement);//select a note index at random
 
-        child_tab.randomlyChangeNote(randomStringIndex, randomTick);
+        guitarTab.randomlyChangeNote(randomStringIndex, randomTick);
 
-        return child_tab;
+        return guitarTab;
     }
 
     private static void calculateGenerationFitness(){
@@ -252,11 +253,11 @@ public class GeneticAlgorithm {
 
         for(int i = 0; i<500;i++){
             calculateEachMemberFitness();
-            ArrayList<Integer> indexes_of_fittest = tournamentSelection(50);
+            ArrayList<Integer> indexesOfFittest = tournamentSelection(50);
             calculateGenerationFitness();
             System.out.println(generational_fitness.get(i));
 
-            reproduce(indexes_of_fittest);
+            reproduce(indexesOfFittest);
             calculateEachMemberFitness();
             Arrays.sort(population);
 
