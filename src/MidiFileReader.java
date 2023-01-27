@@ -13,7 +13,7 @@ public class MidiFileReader {
     public static int resolution;
     public static ArrayList<Note> notes;
 
-    public MidiFileReader(String path) throws InvalidMidiDataException, IOException {
+    public MidiFileReader(String path) throws Exception {
         this.path = path;
         this.resolution = getResolution(path);
         this.tickLength = getTickLength(path);
@@ -21,14 +21,13 @@ public class MidiFileReader {
     }
 
     //a function to read a midi file in to a list of notes
-    public static ArrayList<Note> readMidiFile(String path) throws InvalidMidiDataException, IOException {
+    public static ArrayList<Note> readMidiFile(String path) throws Exception {
         //read midi file in
         Sequence sequence = MidiSystem.getSequence(new File(path));
 
         ArrayList<Note> noteArrayList = new ArrayList<>();
         //loop through each track
         for(Track track : sequence.getTracks()){
-
 
             //loop through each track event
             for(int i=0; i<track.size();i++){
@@ -44,6 +43,9 @@ public class MidiFileReader {
                     if (sm.getCommand() == NOTE_ON) { //print data for note on
                         int key = sm.getData1();
                         int octave = (key / 12)-1;
+                        if(octave<=1){
+                            throw new Exception("error");
+                        }
                         int note = key % 12;
                         String noteName = NOTE_NAMES[note];
 
@@ -54,8 +56,6 @@ public class MidiFileReader {
                         //System.out.println("Note added, " + noteName + octave + " key=" + key);
                     }
                 }
-
-
             }
 
         }

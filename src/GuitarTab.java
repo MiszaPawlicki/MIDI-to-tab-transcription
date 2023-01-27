@@ -17,12 +17,23 @@ public class GuitarTab implements Comparable<GuitarTab> {
 
 
     //all notes on a guitar in standard tuning
-    public static final String[] BOTTOM_E_NOTE_NAMES = {"E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5"};
+    /*public static final String[] BOTTOM_E_NOTE_NAMES = {"E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5"};
     public static final String[] A_STRING_NOTE_NAMES = {"A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5"};
     public static final String[] D_STRING_NOTE_NAMES = {"D4", "D#4","E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6"};
     public static final String[] G_STRING_NOTE_NAMES = {"G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6"};
     public static final String[] B_STRING_NOTE_NAMES = {"B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6"};
-    public static final String[] TOP_E_NOTE_NAMES = {"E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6","C7", "C#7", "D7", "D#7","E7"};
+    public static final String[] TOP_E_NOTE_NAMES = {"E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6","C7", "C#7", "D7", "D#7","E7"};*/
+
+    public static final String[] BOTTOM_E_NOTE_NAMES = {"E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2","C3", "C#3", "D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4"};
+    public static final String[] A_STRING_NOTE_NAMES = {"A2", "A#2", "B2","C3", "C#3", "D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4"};
+    public static final String[] D_STRING_NOTE_NAMES = {"D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5"};
+    public static final String[] G_STRING_NOTE_NAMES = {"G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5"};
+    public static final String[] B_STRING_NOTE_NAMES = {"B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5"};
+    public static final String[] TOP_E_NOTE_NAMES = {"E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6"};
+
+
+
+
 
 
     public GuitarTab(int numTicks) {
@@ -55,14 +66,13 @@ public class GuitarTab implements Comparable<GuitarTab> {
     }
 
     //randomly generate a guitar tab given a list of notes
-    public void generateTab(ArrayList<Note> notes){
+    public void generateTab(ArrayList<Note> notes) throws Exception {
 
         int last_tick = -1;
         ArrayList<Note> simultaneousNotes = new ArrayList<>();
 
         for (Note note:notes) {//loop through each note in the midi file
             if(note.tick!=last_tick){//check you are not at the last tick in the file
-
                 //get all notes that are played at a given tick
                 simultaneousNotes = getSimultaneousNotes((int)note.tick,notes);
 
@@ -73,6 +83,9 @@ public class GuitarTab implements Comparable<GuitarTab> {
                     boolean[][] note_matrix = configureChord(simultaneousNotes);//find a valid permutation of strings the notes can be played on
 
                     for(int i = 0; i<note_matrix.length;i++){
+                        if(Arrays.equals(note_matrix[i],new boolean[]{false, false, false, false, false, false})){
+                            throw new Exception();
+                        }
                         randomlyPlaceNote(note_matrix[i],simultaneousNotes.get(i).fullNoteName,(int)simultaneousNotes.get(i).tick);
                     }
                 }
@@ -163,7 +176,6 @@ public class GuitarTab implements Comparable<GuitarTab> {
 
     //select random index from playable notes
     static int pickRandomIndex(boolean[] stringArray){
-        int bound;
         int randomIndex;
         ArrayList<Integer> trueIndexList = new ArrayList<>();
 
@@ -174,6 +186,9 @@ public class GuitarTab implements Comparable<GuitarTab> {
         }
 
         Random random = new Random();
+        if(!(trueIndexList.size()>0)){
+            System.out.println();
+        }
         randomIndex = random.nextInt(trueIndexList.size());
 
         return trueIndexList.get(randomIndex);
@@ -200,10 +215,13 @@ public class GuitarTab implements Comparable<GuitarTab> {
         }
         return noteMatrix;
     }
-    public void placeSingleNote(Note note){
+    public void placeSingleNote(Note note) throws Exception {
         boolean noteArray[];//initialise array to show if a note can be played (from bottom E to top E)
         noteArray = findFretLocations(note.fullNoteName);//find possible fret locations
         //no need to check if string is empty as it is the only note being placed
+        if(Arrays.equals(noteArray, new boolean[]{false, false, false, false, false, false})){
+            throw new Exception();
+        }
         randomlyPlaceNote(noteArray, note.fullNoteName, (int)note.tick);//place the note according to which notes are free
     }
 

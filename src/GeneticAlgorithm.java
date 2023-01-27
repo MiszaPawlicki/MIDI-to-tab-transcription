@@ -15,12 +15,12 @@ public class GeneticAlgorithm {
     }
 
     //reading the midi file
-    private static void readMidiFile(String path) throws InvalidMidiDataException, IOException {
+    private static void readMidiFile(String path) throws Exception {
         midiFileReader = new MidiFileReader(path);
     }
 
     //a method to generate the population of guitar tabs
-    private static void generatePopulation(int populationSize, String path) throws InvalidMidiDataException, IOException {
+    private static void generatePopulation(int populationSize, String path) throws Exception {
         readMidiFile(path);//read midi file
         population = new GuitarTab[populationSize];
 
@@ -269,7 +269,7 @@ public class GeneticAlgorithm {
     }
 
     //method to run all steps in the genetic algorithm
-    public void runGeneticAlgorithm(String path) throws InvalidMidiDataException, IOException {
+    public void runGeneticAlgorithm(String path) throws Exception {
         generatePopulation(100,path);
 
         for(int i = 0; i<500;i++){
@@ -278,9 +278,13 @@ public class GeneticAlgorithm {
             calculateGenerationFitness();
             System.out.println(generational_fitness.get(i));
 
+
             reproduce(indexesOfFittest);
             calculateEachMemberFitness();
             Arrays.sort(population);
+
+
+
 
         }
 
