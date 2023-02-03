@@ -69,7 +69,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
     public void generateTab(ArrayList<Note> notes) throws Exception {
 
         int last_tick = -1;
-        ArrayList<Note> simultaneousNotes = new ArrayList<>();
+        ArrayList<Note> simultaneousNotes;
 
         for (Note note:notes) {//loop through each note in the midi file
             if(note.tick!=last_tick){//check you are not at the last tick in the file
@@ -149,7 +149,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
     static int lowestTrueCount(boolean[][] noteMatrix, ArrayList<Integer> setChordList){//loop through the matrix and return the note with the lowest true count
         int lowestCountIndex = 0;
         int lowestCount = 7;
-        int trueCount = 0;
+        int trueCount;
         int indexCounter = 0;
 
         //loops through each array in the note matrix and counts the total number of true bool vars
@@ -195,7 +195,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
     }
 
 
-    public static boolean[][] set(boolean[][] noteMatrix,int stringIndex, int noteIndex){//string index - index of the string being set, note index - index of the note being set
+    public static void set(boolean[][] noteMatrix, int stringIndex, int noteIndex){//string index - index of the string being set, note index - index of the note being set
         /////FUNCTION TO SET ALL NOTES BUT ONE TO TRUE OF A CERTAIN STRING VALUE // need to alter to set the string itself.
         for(int i=0; i<noteMatrix.length;i++){
             if(i!=noteIndex){
@@ -213,7 +213,6 @@ public class GuitarTab implements Comparable<GuitarTab> {
             }
 
         }
-        return noteMatrix;
     }
     public void placeSingleNote(Note note) throws Exception {
         boolean noteArray[];//initialise array to show if a note can be played (from bottom E to top E)
@@ -233,33 +232,25 @@ public class GuitarTab implements Comparable<GuitarTab> {
         boolean gString = false;
         boolean bString = false;
         boolean topE = false;
-        int count = 0;
-
 
 
         if(Arrays.asList(BOTTOM_E_NOTE_NAMES).contains(fullNoteName)){
             bottomE=true;
-            count++;
         }
         if(Arrays.asList(A_STRING_NOTE_NAMES).contains(fullNoteName)){
             aString=true;
-            count++;
         }
         if(Arrays.asList(D_STRING_NOTE_NAMES).contains(fullNoteName)){
             dString=true;
-            count++;
         }
         if(Arrays.asList(G_STRING_NOTE_NAMES).contains(fullNoteName)){
             gString=true;
-            count++;
         }
         if(Arrays.asList(B_STRING_NOTE_NAMES).contains(fullNoteName)){
             bString=true;
-            count++;
         }
         if(Arrays.asList(TOP_E_NOTE_NAMES).contains(fullNoteName)){
             topE=true;
-            count++;
         }
 
 
@@ -314,52 +305,50 @@ public class GuitarTab implements Comparable<GuitarTab> {
                 System.out.print(note);
             }
         }
-        System.out.println("");
+        System.out.println(); //needed to print \n char at end of string
     }
 
     //a function to check if any values in a noteArray are true
-    public static boolean checkIfPlayable(boolean[] noteArray){
-        if(noteArray==new boolean[]{false,false,false,false,false,false}){
+    public static void checkIfPlayable(boolean[] noteArray){
+        if(Arrays.equals(noteArray, new boolean[]{false, false, false, false, false, false})){
             try {
                 throw new Exception();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
-        return true;
     }
 
     //A function to randomly change a note position to another valid place to play the same note
-    public boolean randomlyChangeNote(int stringIndex, int noteIndex){
+    public void randomlyChangeNote(int stringIndex, int noteIndex){
         //get note name
         int fretNumber;
         String noteName = "";
-        switch (stringIndex){
-            case 0:
+        switch (stringIndex) {
+            case 0 -> {
                 fretNumber = this.bottomE[noteIndex];
                 noteName = BOTTOM_E_NOTE_NAMES[fretNumber];
-                break;
-            case 1:
+            }
+            case 1 -> {
                 fretNumber = this.aString[noteIndex];
                 noteName = A_STRING_NOTE_NAMES[fretNumber];
-                break;
-            case 2:
+            }
+            case 2 -> {
                 fretNumber = this.dString[noteIndex];
                 noteName = D_STRING_NOTE_NAMES[fretNumber];
-                break;
-            case 3:
+            }
+            case 3 -> {
                 fretNumber = this.gString[noteIndex];
                 noteName = G_STRING_NOTE_NAMES[fretNumber];
-                break;
-            case 4:
+            }
+            case 4 -> {
                 fretNumber = this.bString[noteIndex];
                 noteName = B_STRING_NOTE_NAMES[fretNumber];
-                break;
-            case 5:
+            }
+            case 5 -> {
                 fretNumber = this.topE[noteIndex];
                 noteName = TOP_E_NOTE_NAMES[fretNumber];
-                break;
-
+            }
         }
 
         //check if playable elsewhere
@@ -389,32 +378,16 @@ public class GuitarTab implements Comparable<GuitarTab> {
             }
             if(trueCount>0){
                 randomlyPlaceNote(stringBoolean,noteName,noteIndex);
-                switch (stringIndex){
-                    case 0:
-                        this.bottomE[noteIndex]=-1;
-                        break;
-                    case 1:
-                        this.aString[noteIndex]=-1;
-                        break;
-                    case 2:
-                        this.dString[noteIndex]=-1;
-                        break;
-                    case 3:
-                        this.gString[noteIndex]=-1;
-                        break;
-                    case 4:
-                        this.bString[noteIndex]=-1;
-                        break;
-                    case 5:
-                        this.topE[noteIndex]=-1;
-                        break;
-
+                switch (stringIndex) {
+                    case 0 -> this.bottomE[noteIndex] = -1;
+                    case 1 -> this.aString[noteIndex] = -1;
+                    case 2 -> this.dString[noteIndex] = -1;
+                    case 3 -> this.gString[noteIndex] = -1;
+                    case 4 -> this.bString[noteIndex] = -1;
+                    case 5 -> this.topE[noteIndex] = -1;
                 }
-            }else{
-                return false;
             }
         }
-        return false;
     }
 
     public static void main(String[] args){

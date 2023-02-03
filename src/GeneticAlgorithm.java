@@ -272,23 +272,52 @@ public class GeneticAlgorithm {
     public void runGeneticAlgorithm(String path) throws Exception {
         generatePopulation(100,path);
 
-        for(int i = 0; i<500;i++){
+        for(int i = 0; i<50000;i++){
             calculateEachMemberFitness();
             ArrayList<Integer> indexesOfFittest = tournamentSelection(50);
             calculateGenerationFitness();
-            System.out.println(generational_fitness.get(i));
-
-
+            System.out.println("i: "+i+" "+generational_fitness.get(i));
             reproduce(indexesOfFittest);
             calculateEachMemberFitness();
             Arrays.sort(population);
 
-
-
-
+            if(checkFitnessMonotony(i, 200, 25)){
+                break;
+            }
         }
-
         population[0].printTab(midiFileReader.resolution);
+    }
+
+    public boolean checkFitnessMonotony(int i, int interval, int runLength){
+        /*
+            Function to check if there is little to no change in generational fitness. Returns true if no change else
+            false
+
+            i: iteration number,
+            interval: number of iterations between each check
+            runLength: number of consecutive generational fitness scores to be checked
+        */
+        if(i%interval == 0 && i>0){//this number would be scaled to the size of the track
+            boolean endAlgorithm = true;
+            double dblCurrentGeneration =  (generational_fitness.get(generational_fitness.size()-1));
+            int currentGeneration = (int) dblCurrentGeneration;
+            for(int j = 0; j<runLength; j++){
+                double foo = generational_fitness.get((i-j));
+                int bar = (int)foo;
+                if((bar!=currentGeneration)&&(bar!=currentGeneration-1)&&(bar!=currentGeneration+1)){
+                    endAlgorithm = false;
+                    return false;
+                }
+            }
+            if(endAlgorithm){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void runDatabase(String path){
+        //function to run ga on a whole database
     }
 
     public static void main(String[] args) throws InvalidMidiDataException, IOException {

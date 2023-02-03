@@ -16,17 +16,26 @@ public class Main {
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
         //geneticAlgorithm.runGeneticAlgorithm("C:\\Users\\misza\\OneDrive\\Documents\\Work\\year 3\\TYP\\TYP\\Classical guitar tabs\\duarte_op003_prelude_in_c.mid");
         geneticAlgorithm.runGeneticAlgorithm("Classical guitar tabs/abreu_ticotico.mid");
+    }
 
-        /*
+    public static boolean moveFile(String sourcePath, String targetPath) {
+
+        File fileToMove = new File(sourcePath);
+
+        return fileToMove.renameTo(new File(targetPath));
+    }
+
+    public static void checkDatabase(String filePath) throws Exception{
         //Code to find all files that can be run
-        File path = new File("Classical guitar tabs");
+        //File path = new File("Classical guitar tabs");
+        File path = new File(filePath);
 
         File [] files = path.listFiles();
         ArrayList<String> workingFiles = new ArrayList<>();
         for (int i = 0; i < files.length; i++){
             if (files[i].isFile()){ //this line weeds out other directories/folders
                 try{
-                    String filePath = files[i].toPath().toString();
+                    //String filePath = files[i].toPath().toString();
 
                     GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
                     //geneticAlgorithm.runGeneticAlgorithm("C:\\Users\\misza\\OneDrive\\Documents\\Work\\year 3\\TYP\\TYP\\Classical guitar tabs\\duarte_op003_prelude_in_c.mid");
@@ -39,17 +48,9 @@ public class Main {
                     System.out.println(1);
 
                 }catch(Exception e){
-
+                    //purely for non-crashing purposes
                 }
             }
-        }*/
-
-    }
-
-    public static boolean moveFile(String sourcePath, String targetPath) {
-
-        File fileToMove = new File(sourcePath);
-
-        return fileToMove.renameTo(new File(targetPath));
+        }
     }
 }
