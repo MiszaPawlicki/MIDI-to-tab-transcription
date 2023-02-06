@@ -215,7 +215,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
         }
     }
     public void placeSingleNote(Note note) throws Exception {
-        boolean noteArray[];//initialise array to show if a note can be played (from bottom E to top E)
+        boolean[] noteArray;//initialise array to show if a note can be played (from bottom E to top E)
         noteArray = findFretLocations(note.fullNoteName);//find possible fret locations
         //no need to check if string is empty as it is the only note being placed
         if(Arrays.equals(noteArray, new boolean[]{false, false, false, false, false, false})){
@@ -283,8 +283,8 @@ public class GuitarTab implements Comparable<GuitarTab> {
 
 
 
-    public void printTab(int resolution){
-        boolean doubleDash = false;
+    public void printTab(){
+        boolean doubleDash;
 
         String e = "";
         String a = "";
@@ -300,8 +300,6 @@ public class GuitarTab implements Comparable<GuitarTab> {
             doubleDash = false;
 
 
-            int[][] strings = new int[][]{bottomE,aString,dString,gString,bString,topE};
-
             if(bottomE[i]==-1&&aString[i]==-1&&dString[i]==-1&&gString[i]==-1&&bString[i]==-1&&topE[i]==-1){
                 if(i%numTicks/4==0){
                     E+="-";
@@ -315,12 +313,12 @@ public class GuitarTab implements Comparable<GuitarTab> {
                 if(bottomE[i]>=10||aString[i]>=10||dString[i]>=10||gString[i]>=10||bString[i]>=10||topE[i]>=10){
                     doubleDash=true;
                 }
-                E+=foo(bottomE[i],doubleDash);
-                a+=foo(aString[i],doubleDash);
-                d+=foo(dString[i],doubleDash);
-                g+=foo(gString[i],doubleDash);
-                b+=foo(bString[i],doubleDash);
-                e+=foo(topE[i],doubleDash);
+                E+= noteToString(bottomE[i],doubleDash);
+                a+= noteToString(aString[i],doubleDash);
+                d+= noteToString(dString[i],doubleDash);
+                g+= noteToString(gString[i],doubleDash);
+                b+= noteToString(bString[i],doubleDash);
+                e+= noteToString(topE[i],doubleDash);
             }
         }
         System.out.println(e);
@@ -331,7 +329,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
         System.out.println(E);
     }
 
-    String foo(int fret, boolean doubleDash){
+    String noteToString(int fret, boolean doubleDash){
         if(fret==-1){
             if(doubleDash){
                 return "----";
@@ -343,30 +341,11 @@ public class GuitarTab implements Comparable<GuitarTab> {
                 if(fret<10){
                     return fret+"---";
                 }else{
-                    return Integer.toString(fret)+"--";
+                    return fret+"--";
                 }
             }
         }
-        return Integer.toString(fret)+"-";
-    }
-    //function to print an individual string in ascii form
-    public void printGuitarString(int[] guitarString, int resolution){
-        int counter = 1;
-        for(int note : guitarString){
-            if(note==-1){
-                counter++;
-                if(counter%resolution==0){
-                    System.out.print("|");
-                }
-                else if(counter == resolution/4){
-                    System.out.print("-");
-                    counter=0;
-                }
-            }else{
-                System.out.print(note);
-            }
-        }
-        System.out.println(); //needed to print \n char at end of string
+        return fret+"-";
     }
 
     //a function to check if any values in a noteArray are true

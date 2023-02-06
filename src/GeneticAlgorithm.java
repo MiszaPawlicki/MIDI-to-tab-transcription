@@ -10,10 +10,6 @@ public class GeneticAlgorithm {
     private static ArrayList<Double> generational_fitness = new ArrayList<>();
     protected static MidiFileReader midiFileReader;
 
-    public static GuitarTab[] getPopulation() {
-        return population;
-    }
-
     //reading the midi file
     private static void readMidiFile(String path) throws Exception {
         midiFileReader = new MidiFileReader(path);
@@ -35,7 +31,7 @@ public class GeneticAlgorithm {
     private static void calculateEachMemberFitness(){
         long currentTick = -1;
         int[] currentSimultaneousNotes = null;
-        int[] previousSimultaneousNotes = null;
+        int[] previousSimultaneousNotes;
 
         double totalDistance; // stores the total euclidean distance of a tab
         double distance;//stores the distance of one set of notes to another
@@ -285,7 +281,7 @@ public class GeneticAlgorithm {
             }
         }
         System.out.println("i: " + (generational_fitness.size()-1)+" size: "+population[0].numTicks);
-        population[0].printTab(midiFileReader.resolution);
+        population[0].printTab();
     }
 
     public boolean checkFitnessMonotony(int i, int interval, int runLength){
@@ -305,13 +301,10 @@ public class GeneticAlgorithm {
                 double foo = generational_fitness.get((i-j));
                 int bar = (int)foo;
                 if((bar!=currentGeneration)&&(bar!=currentGeneration-1)&&(bar!=currentGeneration+1)){
-                    endAlgorithm = false;
                     return false;
                 }
             }
-            if(endAlgorithm){
-                return true;
-            }
+            return endAlgorithm;
         }
         return false;
     }

@@ -84,7 +84,7 @@ public class MidiFileReader {
 
         GuitarTab guitarTab = new GuitarTab((int) tickLength);
         guitarTab.generateTab(notes);
-        guitarTab.printTab(resolution);
+        guitarTab.printTab();
 
 
     }
