@@ -14,20 +14,21 @@ public class Main {
     public static void main(String[] args) throws Exception {
         //initialise genetic algorithm object and run
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-        //geneticAlgorithm.runGeneticAlgorithm("C:\\Users\\misza\\OneDrive\\Documents\\Work\\year 3\\TYP\\TYP\\Classical guitar tabs\\duarte_op003_prelude_in_c.mid");
         geneticAlgorithm.runGeneticAlgorithm("Classical guitar tabs/abreu_ticotico.mid");
+
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
-
         File fileToMove = new File(sourcePath);
-
         return fileToMove.renameTo(new File(targetPath));
     }
 
     public static void checkDatabase(String filePath) throws Exception{
-        //Code to find all files that can be run
-        //File path = new File("Classical guitar tabs");
+        /*
+            A function to check what midi files within a folder can be transcribed by the program depending on tuning
+
+            path: path to the folder
+        */
         File path = new File(filePath);
 
         File [] files = path.listFiles();
@@ -35,17 +36,15 @@ public class Main {
         for (int i = 0; i < files.length; i++){
             if (files[i].isFile()){ //this line weeds out other directories/folders
                 try{
-                    //String filePath = files[i].toPath().toString();
-
+                    System.out.println(files[i]);
                     GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-                    //geneticAlgorithm.runGeneticAlgorithm("C:\\Users\\misza\\OneDrive\\Documents\\Work\\year 3\\TYP\\TYP\\Classical guitar tabs\\duarte_op003_prelude_in_c.mid");
-                    geneticAlgorithm.runGeneticAlgorithm(filePath);
-                    workingFiles.add(filePath);
+                    geneticAlgorithm.runGeneticAlgorithm(files[i].toString());
+                    //workingFiles.add(filePath);
 
-                    moveFile(files[i].toPath().toString(), "working_tabs\\"+filePath);
-                    String txtPath = filePath.replace(".mid",".txt");
-                    moveFile(txtPath, "working_tabs\\"+txtPath);
-                    System.out.println(1);
+                    //moveFile(files[i].toPath().toString(), "working_tabs\\"+filePath);
+                    //String txtPath = filePath.replace(".mid",".txt");
+                    //moveFile(txtPath, "working_tabs\\"+txtPath);
+                    //System.out.println(1);
 
                 }catch(Exception e){
                     //purely for non-crashing purposes

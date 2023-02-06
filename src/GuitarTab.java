@@ -281,23 +281,84 @@ public class GuitarTab implements Comparable<GuitarTab> {
         }
     }
 
-    //print the tab in ascii form
-    public void printTab(int resolution) {
-        printGuitarString(this.topE,resolution);
-        printGuitarString(this.bString,resolution);
-        printGuitarString(this.gString,resolution);
-        printGuitarString(this.dString,resolution);
-        printGuitarString(this.aString,resolution);
-        printGuitarString(this.bottomE, resolution);
+
+
+    public void printTab(int resolution){
+        boolean doubleDash = false;
+
+        String e = "";
+        String a = "";
+        String d = "";
+        String g = "";
+        String b = "";
+        String E = "";
+
+
+
+        for(int i = 0; i<numTicks; i++){
+            //print each string, if one fret has a note above the 9th octave, print 2 dashes instead of one
+            doubleDash = false;
+
+
+            int[][] strings = new int[][]{bottomE,aString,dString,gString,bString,topE};
+
+            if(bottomE[i]==-1&&aString[i]==-1&&dString[i]==-1&&gString[i]==-1&&bString[i]==-1&&topE[i]==-1){
+                if(i%numTicks/4==0){
+                    E+="-";
+                    a+="-";
+                    d+="-";
+                    g+="-";
+                    b+="-";
+                    e+="-";
+                }
+            }else{
+                if(bottomE[i]>=10||aString[i]>=10||dString[i]>=10||gString[i]>=10||bString[i]>=10||topE[i]>=10){
+                    doubleDash=true;
+                }
+                E+=foo(bottomE[i],doubleDash);
+                a+=foo(aString[i],doubleDash);
+                d+=foo(dString[i],doubleDash);
+                g+=foo(gString[i],doubleDash);
+                b+=foo(bString[i],doubleDash);
+                e+=foo(topE[i],doubleDash);
+            }
+        }
+        System.out.println(e);
+        System.out.println(a);
+        System.out.println(d);
+        System.out.println(g);
+        System.out.println(b);
+        System.out.println(E);
     }
 
+    String foo(int fret, boolean doubleDash){
+        if(fret==-1){
+            if(doubleDash){
+                return "----";
+            }else{
+                return "--";
+            }
+        }else{
+            if(doubleDash){
+                if(fret<10){
+                    return fret+"---";
+                }else{
+                    return Integer.toString(fret)+"--";
+                }
+            }
+        }
+        return Integer.toString(fret)+"-";
+    }
     //function to print an individual string in ascii form
     public void printGuitarString(int[] guitarString, int resolution){
         int counter = 1;
         for(int note : guitarString){
             if(note==-1){
                 counter++;
-                if(counter == resolution/4){
+                if(counter%resolution==0){
+                    System.out.print("|");
+                }
+                else if(counter == resolution/4){
                     System.out.print("-");
                     counter=0;
                 }
@@ -389,6 +450,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
             }
         }
     }
+
 
     public static void main(String[] args){
 

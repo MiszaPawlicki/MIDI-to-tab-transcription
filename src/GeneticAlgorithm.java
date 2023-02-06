@@ -150,7 +150,7 @@ public class GeneticAlgorithm {
     }
 
     //method to create 2 child tabs from 2 parent tabs
-    static void reproduce(ArrayList<Integer> indexOfFittest){//for each 2 tabs selected in the tournament, swap the middle third to create new child tabs
+    static void reproduce(ArrayList<Integer> indexOfFittest, double crossoverValue){//for each 2 tabs selected in the tournament, swap the middle third to create new child tabs
         int counter = 0;
         GuitarTab[] newPopulation = new GuitarTab[population.length];
         Random rand = new Random();
@@ -166,8 +166,8 @@ public class GeneticAlgorithm {
             GuitarTab tab2 = population[indexOfFittest.get(idx2)];
 
             //crossover the two parent tabs to create the child tabs
-            GuitarTab childTab1 = crossover(tab1,tab2,0.5);
-            GuitarTab childTab2 = crossover(tab2,tab1,0.5);
+            GuitarTab childTab1 = crossover(tab1,tab2,crossoverValue);
+            GuitarTab childTab2 = crossover(tab2,tab1,crossoverValue);
 
             //randomly choose one child tab to mutate
             if(rand.nextInt(2)==1){
@@ -189,24 +189,23 @@ public class GeneticAlgorithm {
     static GuitarTab crossover(GuitarTab parent1,GuitarTab parent2, double crossover){
         GuitarTab childTab = new GuitarTab((int)midiFileReader.tickLength);
 
-        //loop through a section of each tab specified by the crossover. Set the child tab to the same of a given section
-        for(int i = 0; i<midiFileReader.tickLength*crossover;i++){
-            childTab.bottomE[i]=parent1.bottomE[i];
-            childTab.aString[i]=parent1.aString[i];
-            childTab.dString[i]=parent1.dString[i];
-            childTab.gString[i]=parent1.gString[i];
-            childTab.bString[i]=parent1.bString[i];
-            childTab.topE[i]=parent1.topE[i];
 
-        }
-        for(int i = (int) (midiFileReader.tickLength*crossover); i<midiFileReader.tickLength; i++){
-            childTab.bottomE[i]=parent2.bottomE[i];
-            childTab.aString[i]=parent2.aString[i];
-            childTab.dString[i]=parent2.dString[i];
-            childTab.gString[i]=parent2.gString[i];
-            childTab.bString[i]=parent2.bString[i];
-            childTab.topE[i]=parent2.topE[i];
-
+        for(int i = 0; i<midiFileReader.tickLength; i++){
+            if(Math.random()<crossover){
+                childTab.bottomE[i]=parent1.bottomE[i];
+                childTab.aString[i]=parent1.aString[i];
+                childTab.dString[i]=parent1.dString[i];
+                childTab.gString[i]=parent1.gString[i];
+                childTab.bString[i]=parent1.bString[i];
+                childTab.topE[i]=parent1.topE[i];
+            }else{
+                childTab.bottomE[i]=parent2.bottomE[i];
+                childTab.aString[i]=parent2.aString[i];
+                childTab.dString[i]=parent2.dString[i];
+                childTab.gString[i]=parent2.gString[i];
+                childTab.bString[i]=parent2.bString[i];
+                childTab.topE[i]=parent2.topE[i];
+            }
         }
         return childTab;
     }
@@ -277,7 +276,7 @@ public class GeneticAlgorithm {
             ArrayList<Integer> indexesOfFittest = tournamentSelection(50);
             calculateGenerationFitness();
             System.out.println("i: "+i+" "+generational_fitness.get(i));
-            reproduce(indexesOfFittest);
+            reproduce(indexesOfFittest,0.3);
             calculateEachMemberFitness();
             Arrays.sort(population);
 
@@ -285,6 +284,7 @@ public class GeneticAlgorithm {
                 break;
             }
         }
+        System.out.println("i: " + (generational_fitness.size()-1)+" size: "+population[0].numTicks);
         population[0].printTab(midiFileReader.resolution);
     }
 
