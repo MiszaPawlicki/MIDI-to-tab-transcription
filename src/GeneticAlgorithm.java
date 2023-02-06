@@ -281,7 +281,7 @@ public class GeneticAlgorithm {
             }
         }
         System.out.println("i: " + (generational_fitness.size()-1)+" size: "+population[0].numTicks);
-        population[0].printTab();
+        population[0].printTab(midiFileReader.resolution);
     }
 
     public boolean checkFitnessMonotony(int i, int interval, int runLength){

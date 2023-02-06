@@ -283,7 +283,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
 
 
 
-    public void printTab(){
+    public void printTab(int resolution){
         boolean doubleDash;
 
         String e = "";
@@ -299,6 +299,14 @@ public class GuitarTab implements Comparable<GuitarTab> {
             //print each string, if one fret has a note above the 9th octave, print 2 dashes instead of one
             doubleDash = false;
 
+            if(i%(resolution*2)==0){
+                E+="|-";
+                a+="|-";
+                d+="|-";
+                g+="|-";
+                b+="|-";
+                e+="|-";
+            }
 
             if(bottomE[i]==-1&&aString[i]==-1&&dString[i]==-1&&gString[i]==-1&&bString[i]==-1&&topE[i]==-1){
                 if(i%numTicks/4==0){
