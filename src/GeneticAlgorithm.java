@@ -43,11 +43,13 @@ public class GeneticAlgorithm {
                 if(note.tick!=currentTick){
                     if(currentSimultaneousNotes==null){
                         currentSimultaneousNotes = getSimultaneousNotes((int)note.tick, guitarTab);
+                        totalDistance+=penaliseSparseNotes(currentSimultaneousNotes);
                         currentTick = note.tick;
                     }else{
                         previousSimultaneousNotes = currentSimultaneousNotes;
                         currentSimultaneousNotes = getSimultaneousNotes((int)note.tick, guitarTab);
                         distance = euclidianDistance(previousSimultaneousNotes, currentSimultaneousNotes);
+                        totalDistance+=penaliseSparseNotes(currentSimultaneousNotes);
                         totalDistance+=distance;
                     }
                 }
@@ -58,6 +60,38 @@ public class GeneticAlgorithm {
         //sort the population in order of fitness
         Arrays.sort(population);
 
+    }
+
+    public static int penaliseSparseNotes(int[] currentNotes){
+        /*
+            A function to penalise fitness if notes are further than 4 frets apart whilst being played simultaniously
+        */
+        int penalty = 0;
+        //check there are at least two notes being played
+        if(!((int) Arrays.stream(currentNotes).filter(i -> i == -1).count()>=5)){
+
+            //for each note check if the distance between any other note being played simultaniously is greater than 4
+            for(int note1 : currentNotes){
+                if(note1!=-1){
+                    for(int note2 : currentNotes){
+                        if(note2!=-1){
+                            if(note1>note2){
+                                if((note1-note2)>=5){
+                                    penalty+= (note1-note2);
+                                }
+                            }else{
+                                if((note2-note1)>=5){
+                                    penalty+= (note2-note1);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        return penalty;
     }
 
     // a function to get all notes played simultaniously
@@ -267,7 +301,7 @@ public class GeneticAlgorithm {
     public void runGeneticAlgorithm(String path) throws Exception {
         generatePopulation(100,path);
 
-        for(int i = 0; i<50000;i++){
+        for(int i = 0; i<1500;i++){
             calculateEachMemberFitness();
             ArrayList<Integer> indexesOfFittest = tournamentSelection(50);
             calculateGenerationFitness();

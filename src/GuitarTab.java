@@ -300,41 +300,42 @@ public class GuitarTab implements Comparable<GuitarTab> {
             doubleDash = false;
 
             if(i%(resolution*2)==0){
-                E+="|-";
+                e+="|-";
                 a+="|-";
                 d+="|-";
                 g+="|-";
                 b+="|-";
-                e+="|-";
+                E+="|-";
             }
 
             if(bottomE[i]==-1&&aString[i]==-1&&dString[i]==-1&&gString[i]==-1&&bString[i]==-1&&topE[i]==-1){
                 if(i%numTicks/4==0){
-                    E+="-";
+                    e+="-";
                     a+="-";
                     d+="-";
                     g+="-";
                     b+="-";
-                    e+="-";
+                    E+="-";
                 }
             }else{
                 if(bottomE[i]>=10||aString[i]>=10||dString[i]>=10||gString[i]>=10||bString[i]>=10||topE[i]>=10){
                     doubleDash=true;
                 }
-                E+= noteToString(bottomE[i],doubleDash);
+                e+= noteToString(bottomE[i],doubleDash);
                 a+= noteToString(aString[i],doubleDash);
                 d+= noteToString(dString[i],doubleDash);
                 g+= noteToString(gString[i],doubleDash);
                 b+= noteToString(bString[i],doubleDash);
-                e+= noteToString(topE[i],doubleDash);
+                E+= noteToString(topE[i],doubleDash);
             }
         }
-        System.out.println(e);
-        System.out.println(a);
-        System.out.println(d);
-        System.out.println(g);
-        System.out.println(b);
+
         System.out.println(E);
+        System.out.println(b);
+        System.out.println(g);
+        System.out.println(d);
+        System.out.println(a);
+        System.out.println(e);
     }
 
     String noteToString(int fret, boolean doubleDash){
