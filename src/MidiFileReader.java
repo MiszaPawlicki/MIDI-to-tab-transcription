@@ -6,7 +6,6 @@ import javax.sound.midi.*;
 public class MidiFileReader {
 
     public static final int NOTE_ON = 0x90; //value for note on
-    public static final int NOTE_OFF = 0x80;//value for note off
     public static final String[] NOTE_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}; //all possible notes regardless of octave that can be played
     public static String path;
     public static long tickLength;

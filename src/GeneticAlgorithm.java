@@ -64,37 +64,34 @@ public class GeneticAlgorithm {
 
     public static int penaliseSparseNotes(int[] currentNotes){
         /*
-            A function to penalise fitness if notes are further than 4 frets apart whilst being played simultaniously
+            A function to penalise fitness if notes are further than 4 frets apart whilst being played simultaneously
         */
         int penalty = 0;
+        double penaltyModifier = 1;
         //check there are at least two notes being played
         if(!((int) Arrays.stream(currentNotes).filter(i -> i == -1).count()>=5)){
-
-            //for each note check if the distance between any other note being played simultaniously is greater than 4
+            //for each note check if the distance between any other note being played simultaneously is greater than 4
             for(int note1 : currentNotes){
                 if(note1!=-1){
                     for(int note2 : currentNotes){
                         if(note2!=-1){
                             if(note1>note2){
                                 if((note1-note2)>=5){
-                                    penalty+= (note1-note2);
+                                    penalty+= (note1-note2)*penaltyModifier;
                                 }
-                            }else{
-                                if((note2-note1)>=5){
-                                    penalty+= (note2-note1);
-                                }
+                            }else if((note2-note1)>=5){
+                                penalty+= (note2-note1)*penaltyModifier;
                             }
                         }
                     }
                 }
-
             }
         }
 
         return penalty;
     }
 
-    // a function to get all notes played simultaniously
+    // a function to get all notes played simultaneously
     private static int[] getSimultaneousNotes(int tick, GuitarTab guitarTab){
         int[] allStrings = {-1,-1,-1,-1,-1,-1}; // boolean array representing each note and whether the string is in use
 
@@ -148,7 +145,7 @@ public class GeneticAlgorithm {
         return total;
     }
 
-    //randomly select two tabs and return the index of the tabs that one their individual comparasons
+    //randomly select two tabs and return the index of the tabs that one their individual comparisons
     private static ArrayList<Integer> tournamentSelection(int numSelections){
         Random random = new Random();
         ArrayList<Integer> indexOfFittest = new ArrayList<>();
@@ -162,7 +159,7 @@ public class GeneticAlgorithm {
                 //getting the random tabs
                 randomIndex1 = random.nextInt(numSelections);
                 randomIndex2 = random.nextInt(numSelections);
-                //checking the tab hasnt already been selected
+                //checking the tab hasn't already been selected
                 if(!(indexOfFittest.contains(randomIndex1))&&!(indexOfFittest.contains(randomIndex2))){
                     break;
                 }
@@ -298,7 +295,7 @@ public class GeneticAlgorithm {
     }
 
     //method to run all steps in the genetic algorithm
-    public void runGeneticAlgorithm(String path) throws Exception {
+    public GuitarTab runGeneticAlgorithm(String path) throws Exception {
         generatePopulation(100,path);
 
         for(int i = 0; i<1500;i++){
@@ -306,7 +303,7 @@ public class GeneticAlgorithm {
             ArrayList<Integer> indexesOfFittest = tournamentSelection(50);
             calculateGenerationFitness();
             System.out.println("i: "+i+" "+generational_fitness.get(i));
-            reproduce(indexesOfFittest,0.3);
+            reproduce(indexesOfFittest,0.2);
             calculateEachMemberFitness();
             Arrays.sort(population);
 
@@ -316,6 +313,7 @@ public class GeneticAlgorithm {
         }
         System.out.println("i: " + (generational_fitness.size()-1)+" size: "+population[0].numTicks);
         population[0].printTab(midiFileReader.resolution);
+        return population[0];
     }
 
     public boolean checkFitnessMonotony(int i, int interval, int runLength){
@@ -328,7 +326,6 @@ public class GeneticAlgorithm {
             runLength: number of consecutive generational fitness scores to be checked
         */
         if(i%interval == 0 && i>0){//this number would be scaled to the size of the track
-            boolean endAlgorithm = true;
             double dblCurrentGeneration =  (generational_fitness.get(generational_fitness.size()-1));
             int currentGeneration = (int) dblCurrentGeneration;
             for(int j = 0; j<runLength; j++){
@@ -338,7 +335,7 @@ public class GeneticAlgorithm {
                     return false;
                 }
             }
-            return endAlgorithm;
+            return true;
         }
         return false;
     }

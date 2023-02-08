@@ -24,17 +24,21 @@ public class GuitarTab implements Comparable<GuitarTab> {
     public static final String[] B_STRING_NOTE_NAMES = {"B4","C5", "C#5", "D5", "D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5","C6","C#6","D6","D#6","E6","F6","F#6","G6","G#6","A6","A#6","B6"};
     public static final String[] TOP_E_NOTE_NAMES = {"E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6", "F6", "F#6", "G6", "G#6", "A6", "A#6", "B6","C7", "C#7", "D7", "D#7","E7"};*/
 
-    public static final String[] BOTTOM_E_NOTE_NAMES = {"E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2","C3", "C#3", "D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4"};
+    //classical guitar tabs
+    /*public static final String[] BOTTOM_E_NOTE_NAMES = {"E2", "F2", "F#2", "G2", "G#2", "A2", "A#2", "B2","C3", "C#3", "D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4"};
     public static final String[] A_STRING_NOTE_NAMES = {"A2", "A#2", "B2","C3", "C#3", "D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4"};
     public static final String[] D_STRING_NOTE_NAMES = {"D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5"};
     public static final String[] G_STRING_NOTE_NAMES = {"G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5"};
     public static final String[] B_STRING_NOTE_NAMES = {"B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5","C#5","D5","D#5","E5","F5","F#5","G5","G#5","A5","A#5","B5"};
-    public static final String[] TOP_E_NOTE_NAMES = {"E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6"};
+    public static final String[] TOP_E_NOTE_NAMES = {"E4", "F4", "F#4", "G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5", "F#5", "G5", "G#5", "A5", "A#5", "B5","C6", "C#6", "D6", "D#6","E6"};*/
 
-
-
-
-
+    //lute tabs
+    public static final String[] BOTTOM_E_NOTE_NAMES = {"G2", "G#2", "A2", "A#2", "B2","C3", "C#3", "D3", "D#3","E3", "F3"};
+    public static final String[] A_STRING_NOTE_NAMES = {"C3", "C#3", "D3", "D#3","E3", "F3", "F#3", "G3", "G#3", "A3", "A#3"};
+    public static final String[] D_STRING_NOTE_NAMES = {"F3", "F#3", "G3", "G#3", "A3", "A#3", "B3","C4", "C#4", "D4", "D#4"};
+    public static final String[] G_STRING_NOTE_NAMES = {"A3", "A#3", "B3","C4", "C#4", "D4", "D#4","E4","F4","F#4","G4"};
+    public static final String[] B_STRING_NOTE_NAMES = {"D4", "D#4","E4","F4","F#4","G4","G#4","A4","A#4","B4","C5"};
+    public static final String[] TOP_E_NOTE_NAMES = {"G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5"};
 
     public GuitarTab(int numTicks) {
         this.bottomE = new int[numTicks];
@@ -275,7 +279,6 @@ public class GuitarTab implements Comparable<GuitarTab> {
                     case (4) -> this.bString[tick] = Arrays.asList(B_STRING_NOTE_NAMES).indexOf(note);
                     case (5) -> this.topE[tick] = Arrays.asList(TOP_E_NOTE_NAMES).indexOf(note);
                 }
-                //System.out.println(tick);
                 break;
             }
         }
@@ -293,13 +296,11 @@ public class GuitarTab implements Comparable<GuitarTab> {
         String b = "";
         String E = "";
 
-
-
         for(int i = 0; i<numTicks; i++){
             //print each string, if one fret has a note above the 9th octave, print 2 dashes instead of one
             doubleDash = false;
 
-            if(i%(resolution*2)==0){
+            if(i%(resolution*3)==0){
                 e+="|-";
                 a+="|-";
                 d+="|-";

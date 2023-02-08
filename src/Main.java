@@ -14,8 +14,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
         //initialise genetic algorithm object and run
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-        geneticAlgorithm.runGeneticAlgorithm("Classical guitar tabs/abreu_ticotico.mid");
-
+        GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm("Dowland/2.mid");
+        System.out.println(TabReader.convertGeneratedTab(tab.allStrings));
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
