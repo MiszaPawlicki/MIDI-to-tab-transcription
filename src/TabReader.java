@@ -1,3 +1,5 @@
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class TabReader {
@@ -77,11 +79,57 @@ public class TabReader {
     }
 
     public static String parseTabFile(String fileContents){
+
+        String[] lines = fileContents.split("\n");
+
+        String cleanedTab = "";
+
+        for(String line : lines){
+            if(checkLine(line)){
+                cleanedTab+=filterLine(line);
+            }
+        }
+
         return "Not implemented yet";
     }
 
+    private static boolean checkLine(String line){
+        /*
+            Function to check if line contains fretting information
+        */
+        if(line==""){
+            return false;
+        }
+        if(line.charAt(0)=='{'){
+            return false;
+        }
+        if(line.charAt(0)=='b'){
+            return false;
+        }
+
+
+        return true;
+    }
+
+    private static String filterLine(String line){
+        /*
+            Function that takes a line and returns only the fretting information
+        */
+
+        String[] letters = new String[]{"x","X", "Y", "v", "b", "-", ".", "#"};
+        String[] numbers = new String[]{"0","1","2","3","4","5","6","7","8","9"};
+
+        return "";
+    }
+
     public static void main(String[] args) throws Exception {
-        System.out.println(tabNumToChar(2));
+        //System.out.println(tabNumToChar(2));
+
+        Path filePath = Path.of("Dowland/2.tab");
+        String content = Files.readString(filePath);
+        parseTabFile(content);
+
+        //System.out.println(checkLine("{jeff"));
 
     }
 }

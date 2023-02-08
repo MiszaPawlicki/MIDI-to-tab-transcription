@@ -340,10 +340,6 @@ public class GeneticAlgorithm {
         return false;
     }
 
-    public static void runDatabase(String path){
-        //function to run ga on a whole database
-    }
-
     public static void main(String[] args) throws InvalidMidiDataException, IOException {
 
 
