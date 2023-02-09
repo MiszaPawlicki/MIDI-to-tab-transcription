@@ -303,7 +303,7 @@ public class GeneticAlgorithm {
             ArrayList<Integer> indexesOfFittest = tournamentSelection(50);
             calculateGenerationFitness();
             System.out.println("i: "+i+" "+generational_fitness.get(i));
-            reproduce(indexesOfFittest,0.2);
+            reproduce(indexesOfFittest,0.3);
             calculateEachMemberFitness();
             Arrays.sort(population);
 

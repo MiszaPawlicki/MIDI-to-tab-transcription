@@ -15,7 +15,9 @@ public class Main {
         //initialise genetic algorithm object and run
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
         GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm("Dowland/2.mid");
-        System.out.println(TabReader.convertGeneratedTab(tab.allStrings));
+        //System.out.println(TabReader.convertGeneratedTab(tab.allStrings));
+
+        TabReader.compare("Dowland/2.mid", TabReader.convertGeneratedTab(tab.allStrings));
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {

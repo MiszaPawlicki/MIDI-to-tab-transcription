@@ -1,6 +1,8 @@
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TabReader {
 
@@ -90,7 +92,7 @@ public class TabReader {
             }
         }
 
-        return "Not implemented yet";
+        return cleanedTab;
     }
 
     private static boolean checkLine(String line){
@@ -103,9 +105,16 @@ public class TabReader {
         if(line.charAt(0)=='{'){
             return false;
         }
-        if(line.charAt(0)=='b'){
+        if(line.charAt(0)=='b'&&line.length()==1){
             return false;
         }
+        if(line.charAt(0)=='\n'){
+            return false;
+        }
+        if(line.charAt(0)=='%'){
+            return false;
+        }
+
 
 
         return true;
@@ -116,10 +125,66 @@ public class TabReader {
             Function that takes a line and returns only the fretting information
         */
 
-        String[] letters = new String[]{"x","X", "Y", "v", "b", "-", ".", "#"};
-        String[] numbers = new String[]{"0","1","2","3","4","5","6","7","8","9"};
+        String cleanString = line;
+        ArrayList<Character> letters = new ArrayList<Character>(Arrays.asList('x','X', 'Y', 'v'));
+        ArrayList<Character> primarySymbols = new ArrayList<Character>(Arrays.asList('#'));
+        ArrayList<Character> secondarySymbols = new ArrayList<Character>(Arrays.asList('-','.'));
+        ArrayList<Character> numbers = new ArrayList<Character>(Arrays.asList('0','1','2','3','4','5','6','7','8','0'));
 
-        return "";
+        line=filter(letters, line);
+        line=filter(primarySymbols, line);
+        line=filter(numbers, line);
+        line=filter(secondarySymbols, line);
+
+        if(line.length()!=0){
+            if(Character.isAlphabetic(line.charAt(0))){
+                if(Character.isUpperCase(line.charAt(0))){
+                    line=line.substring(1);
+                }
+            }
+        }
+
+        if(line.length()==0){
+            return "";
+        }else{
+            line+="\n";
+        }
+
+        return line;
+    }
+
+    public static String filter(ArrayList<Character> filters, String line){
+        if(line.length()!=0){
+            if(filters.contains(line.charAt(0))){
+                line=line.substring(1);
+            }
+        }
+
+        return line;
+    }
+
+    public static void compare(String path, String generatedTab) throws IOException {
+        Path filePath = Path.of("Dowland/2.tab");
+        String content = Files.readString(filePath);
+        String grandTruth = parseTabFile(content);
+
+        String[] grandTruthRows = grandTruth.split("\n");
+        String[] generatedTabRows = generatedTab.split("\n");
+
+        int counter = 0;
+
+        if(grandTruthRows.length==generatedTabRows.length){
+            for(int i=0; i<grandTruthRows.length; i++){
+                if(  generatedTabRows[i].stripTrailing().equals(grandTruthRows[i])){
+                    counter++;
+                }
+            }
+
+            double accuracy = (((double)counter)/((double)generatedTabRows.length))*100;
+            System.out.println("acc: "+ accuracy+"%");
+        }else{
+            System.out.println("Tabs different length");
+        }
     }
 
     public static void main(String[] args) throws Exception {
@@ -129,7 +194,7 @@ public class TabReader {
         String content = Files.readString(filePath);
         parseTabFile(content);
 
-        //System.out.println(checkLine("{jeff"));
+        System.out.println(checkLine("x    a"));
 
     }
 }
