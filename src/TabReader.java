@@ -126,7 +126,7 @@ public class TabReader {
         */
 
         String cleanString = line;
-        ArrayList<Character> letters = new ArrayList<Character>(Arrays.asList('x','X', 'Y', 'v'));
+        ArrayList<Character> letters = new ArrayList<Character>(Arrays.asList('x','X', 'Y', 'v','b'));
         ArrayList<Character> primarySymbols = new ArrayList<Character>(Arrays.asList('#'));
         ArrayList<Character> secondarySymbols = new ArrayList<Character>(Arrays.asList('-','.'));
         ArrayList<Character> numbers = new ArrayList<Character>(Arrays.asList('0','1','2','3','4','5','6','7','8','0'));
