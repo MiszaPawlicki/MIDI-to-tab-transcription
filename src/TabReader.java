@@ -85,10 +85,13 @@ public class TabReader {
         String[] lines = fileContents.split("\n");
 
         String cleanedTab = "";
-
+        String cleanedLine = "";
         for(String line : lines){
             if(checkLine(line)){
-                cleanedTab+=filterLine(line);
+                cleanedLine = filterLine2(line);
+                if(!cleanedLine.equals("\n")){
+                    cleanedTab+=cleanedLine;
+                }
             }
         }
 
@@ -112,6 +115,12 @@ public class TabReader {
             return false;
         }
         if(line.charAt(0)=='%'){
+            return false;
+        }
+        if(line.length()>9){
+            return false;
+        }
+        if(line.length()<=1){
             return false;
         }
 
@@ -153,6 +162,48 @@ public class TabReader {
         return line;
     }
 
+    private static String filterLine2(String line){
+        /*
+            Function that takes a line and returns only the fretting information
+        */
+
+        String cleanString = "";
+        ArrayList<Character> letters = new ArrayList<Character>(Arrays.asList('x','X', 'Y', 'v','Q','B'));
+        ArrayList<Character> primarySymbols = new ArrayList<Character>(Arrays.asList('#'));
+        ArrayList<Character> secondarySymbols = new ArrayList<Character>(Arrays.asList('-','.'));
+        ArrayList<Character> numbers = new ArrayList<Character>(Arrays.asList('0','1','2','3','4','5','6','7','8','0'));
+
+        char currentChar;
+
+        for(int i = line.length()-1; i>=0; i--){
+            currentChar = line.charAt(i);
+            if(primarySymbols.contains(currentChar)){
+                break;
+            }else if(numbers.contains(currentChar)){
+                break;
+            }else if(secondarySymbols.contains(currentChar)){
+                break;
+            }else if(letters.contains(currentChar)){
+                break;
+            }
+
+            if(currentChar==' '){
+                cleanString+=" ";
+            }else{
+                cleanString+=currentChar;
+            }
+
+
+        }
+        cleanString = new StringBuffer(cleanString).reverse().toString();
+        if (!cleanString.trim().isEmpty()) {
+            cleanString+="\n";
+        }
+
+
+        return cleanString;
+    }
+
     public static String filter(ArrayList<Character> filters, String line){
         if(line.length()!=0){
             if(filters.contains(line.charAt(0))){
@@ -163,19 +214,19 @@ public class TabReader {
         return line;
     }
 
-    public static void compare(String path, String generatedTab) throws IOException {
+    public static void compare(String path,String generatedTab) throws IOException {
         Path filePath = Path.of("Dowland/2.tab");
         String content = Files.readString(filePath);
         String grandTruth = parseTabFile(content);
 
-        String[] grandTruthRows = grandTruth.split("\n");
-        String[] generatedTabRows = generatedTab.split("\n");
+        String[] grandTruthRows = grandTruth.trim().split("\n");
+        String[] generatedTabRows = generatedTab.trim().split("\n");
 
         int counter = 0;
 
         if(grandTruthRows.length==generatedTabRows.length){
             for(int i=0; i<grandTruthRows.length; i++){
-                if(  generatedTabRows[i].stripTrailing().equals(grandTruthRows[i])){
+                if(generatedTabRows[i].stripTrailing().equals(grandTruthRows[i])){
                     counter++;
                 }
             }
@@ -190,11 +241,11 @@ public class TabReader {
     public static void main(String[] args) throws Exception {
         //System.out.println(tabNumToChar(2));
 
-        Path filePath = Path.of("Dowland/2.tab");
+        Path filePath = Path.of("Dowland/3.tab");
         String content = Files.readString(filePath);
-        parseTabFile(content);
 
-        System.out.println(checkLine("x    a"));
+
+        System.out.println(parseTabFile(content));
 
     }
 }

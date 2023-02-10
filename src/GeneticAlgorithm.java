@@ -295,10 +295,10 @@ public class GeneticAlgorithm {
     }
 
     //method to run all steps in the genetic algorithm
-    public GuitarTab runGeneticAlgorithm(String path) throws Exception {
+    public GuitarTab runGeneticAlgorithm(String path, int iterations) throws Exception {
         generatePopulation(100,path);
 
-        for(int i = 0; i<1500;i++){
+        for(int i = 0; i<iterations;i++){
             calculateEachMemberFitness();
             ArrayList<Integer> indexesOfFittest = tournamentSelection(50);
             calculateGenerationFitness();

@@ -2,6 +2,7 @@ import javax.sound.midi.InvalidMidiDataException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -12,12 +13,15 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception {
+
+        String path = "Dowland/2.mid";
         //initialise genetic algorithm object and run
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-        GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm("Dowland/2.mid");
+        GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(path,1500);
         //System.out.println(TabReader.convertGeneratedTab(tab.allStrings));
 
-        TabReader.compare("Dowland/2.mid", TabReader.convertGeneratedTab(tab.allStrings));
+
+        TabReader.compare(path, TabReader.convertGeneratedTab(tab.allStrings));
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
@@ -40,7 +44,7 @@ public class Main {
                 try{
                     System.out.println(files[i]);
                     GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-                    geneticAlgorithm.runGeneticAlgorithm(files[i].toString());
+                    geneticAlgorithm.runGeneticAlgorithm(files[i].toString(),1);
                     //workingFiles.add(filePath);
 
                     //moveFile(files[i].toPath().toString(), "working_tabs\\"+filePath);
