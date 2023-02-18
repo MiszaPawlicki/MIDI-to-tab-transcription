@@ -11,7 +11,7 @@ public class TabReader {
         int length = tab[0].length;
         String fullTab = "";
         for(int i = 0; i<length; i++){
-            int[] currentNotes = new int[]{tab[5][i], tab[4][i], tab[3][i], tab[2][i], tab[1][i], tab[0][i]};
+            int[] currentNotes = new int[]{tab[0][i], tab[1][i], tab[2][i], tab[3][i], tab[4][i], tab[5][i]};
 
             //check if all notes are -1
             if (checkMinusOne(currentNotes)) {
@@ -54,27 +54,27 @@ public class TabReader {
         */
         switch (fretNum){
             case 0:
-                return "a";
+                return "0";
             case 1:
-                return "b";
+                return "1";
             case 2:
-                return "c";
+                return "2";
             case 3:
-                return "d";
+                return "3";
             case 4:
-                return "e";
+                return "4";
             case 5:
-                return "f";
+                return "5";
             case 6:
-                return "g";
+                return "6";
             case 7:
-                return "h";
+                return "7";
             case 8:
-                return "i";
+                return "8";
             case 9:
-                return "k";
+                return "9";
             case 10:
-                return "l";
+                return "10";
 
         }
         throw new Exception();
@@ -88,11 +88,48 @@ public class TabReader {
         String cleanedLine = "";
         for(String line : lines){
             if(checkLine(line)){
-                cleanedLine = filterLine2(line);
+                cleanedLine = filterLine(line);
                 if(!cleanedLine.equals("\n")){
                     cleanedTab+=cleanedLine;
                 }
             }
+        }
+
+        return cleanedTab;
+    }
+
+    public static String parseTabFile2(String fileContents){
+        String[] lines = fileContents.split("\n");
+
+        /*
+            To do:
+                - fix white space errors, strips spaces at beginnign of word
+        */
+
+        String cleanedTab = "";
+        for(String line : lines){
+            if(line.length()>0){
+                if(line.charAt(0)!='%'&&line.charAt(0)!='{'&&line.charAt(0)!='$'){
+
+                    // remove first char of line
+                    line = line.substring(1);
+                    if(line.length()>0){
+                        // if line begins with %, skip
+                        // remove all non numeric chars or spaces
+                        line = line.replaceAll("[^0-9\s]+", "");
+                        //line=line.stripTrailing();
+                        //line = new StringBuffer(line).reverse().toString();
+                        if(line.stripTrailing()!=""){
+                            cleanedTab+=line+"\n";
+                        }
+
+                    }
+                }
+
+            }
+
+
+
         }
 
         return cleanedTab;
@@ -130,39 +167,6 @@ public class TabReader {
     }
 
     private static String filterLine(String line){
-        /*
-            Function that takes a line and returns only the fretting information
-        */
-
-        String cleanString = line;
-        ArrayList<Character> letters = new ArrayList<Character>(Arrays.asList('x','X', 'Y', 'v','b'));
-        ArrayList<Character> primarySymbols = new ArrayList<Character>(Arrays.asList('#'));
-        ArrayList<Character> secondarySymbols = new ArrayList<Character>(Arrays.asList('-','.'));
-        ArrayList<Character> numbers = new ArrayList<Character>(Arrays.asList('0','1','2','3','4','5','6','7','8','0'));
-
-        line=filter(letters, line);
-        line=filter(primarySymbols, line);
-        line=filter(numbers, line);
-        line=filter(secondarySymbols, line);
-
-        if(line.length()!=0){
-            if(Character.isAlphabetic(line.charAt(0))){
-                if(Character.isUpperCase(line.charAt(0))){
-                    line=line.substring(1);
-                }
-            }
-        }
-
-        if(line.length()==0){
-            return "";
-        }else{
-            line+="\n";
-        }
-
-        return line;
-    }
-
-    private static String filterLine2(String line){
         /*
             Function that takes a line and returns only the fretting information
         */
@@ -215,9 +219,11 @@ public class TabReader {
     }
 
     public static void compare(String path,String generatedTab) throws IOException {
-        Path filePath = Path.of("Dowland/2.tab");
+        //NEED FILE PATH TO TAKE PARAMETER AND NOT STING LITERAL
+
+        Path filePath = Path.of(path);
         String content = Files.readString(filePath);
-        String grandTruth = parseTabFile(content);
+        String grandTruth = parseTabFile2(content);
 
         String[] grandTruthRows = grandTruth.trim().split("\n");
         String[] generatedTabRows = generatedTab.trim().split("\n");
@@ -241,7 +247,7 @@ public class TabReader {
     public static void main(String[] args) throws Exception {
         //System.out.println(tabNumToChar(2));
 
-        Path filePath = Path.of("Dowland/3.tab");
+        Path filePath = Path.of("Dowland/6.tab");
         String content = Files.readString(filePath);
 
 

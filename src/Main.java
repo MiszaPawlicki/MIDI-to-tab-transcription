@@ -13,15 +13,18 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception {
-
-        String path = "Dowland/2.mid";
+        /*String path = "F_da_Milano/MIDI/004_Milano_4.mid";
+        String tabPath = "F_da_Milano/TAB/004_Milano_4.tab";
         //initialise genetic algorithm object and run
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-        GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(path,1500);
+        GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(path,300);
         //System.out.println(TabReader.convertGeneratedTab(tab.allStrings));
 
 
-        TabReader.compare(path, TabReader.convertGeneratedTab(tab.allStrings));
+        TabReader.compare(tabPath, TabReader.convertGeneratedTab(tab.allStrings));*/
+
+        checkDatabase("F_da_Milano/MIDI","F_da_Milano/TAB");
+
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
@@ -29,28 +32,27 @@ public class Main {
         return fileToMove.renameTo(new File(targetPath));
     }
 
-    public static void checkDatabase(String filePath) throws Exception{
+    public static void checkDatabase(String midiFolderPath, String tabFolderPath) throws Exception{
         /*
             A function to check what midi files within a folder can be transcribed by the program depending on tuning
 
             path: path to the folder
         */
-        File path = new File(filePath);
+        File midiPaths = new File(midiFolderPath);
+        File tabPaths = new File(tabFolderPath);
 
-        File [] files = path.listFiles();
-        ArrayList<String> workingFiles = new ArrayList<>();
-        for (int i = 0; i < files.length; i++){
-            if (files[i].isFile()){ //this line weeds out other directories/folders
+        File [] midiFiles = midiPaths.listFiles();
+        File [] tabFiles = tabPaths.listFiles();
+        for (int i = 0; i < midiFiles.length; i++){
+            if (midiFiles[i].isFile()){ //this line weeds out other directories/folders
                 try{
-                    System.out.println(files[i]);
+                    System.out.println(midiFiles[i]);
+                    System.out.println(tabFiles[i]);
                     GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-                    geneticAlgorithm.runGeneticAlgorithm(files[i].toString(),1);
-                    //workingFiles.add(filePath);
+                    GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(midiFiles[i].toString(),500);
+                    TabReader.compare(tabFiles[i].toString(), TabReader.convertGeneratedTab(tab.allStrings));
+                    System.out.println("-------------------------------------------------------------");
 
-                    //moveFile(files[i].toPath().toString(), "working_tabs\\"+filePath);
-                    //String txtPath = filePath.replace(".mid",".txt");
-                    //moveFile(txtPath, "working_tabs\\"+txtPath);
-                    //System.out.println(1);
 
                 }catch(Exception e){
                     //purely for non-crashing purposes
