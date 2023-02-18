@@ -218,7 +218,7 @@ public class TabReader {
         return line;
     }
 
-    public static void compare(String path,String generatedTab) throws IOException {
+    public static double compare(String path,String generatedTab) throws IOException {
         //NEED FILE PATH TO TAKE PARAMETER AND NOT STING LITERAL
 
         Path filePath = Path.of(path);
@@ -232,16 +232,18 @@ public class TabReader {
 
         if(grandTruthRows.length==generatedTabRows.length){
             for(int i=0; i<grandTruthRows.length; i++){
-                if(generatedTabRows[i].stripTrailing().equals(grandTruthRows[i])){
+                if(generatedTabRows[i].stripTrailing().equals(grandTruthRows[i].stripTrailing())){
                     counter++;
                 }
             }
 
             double accuracy = (((double)counter)/((double)generatedTabRows.length))*100;
             System.out.println("acc: "+ accuracy+"%");
+            return accuracy;
         }else{
             System.out.println("Tabs different length");
         }
+        return 0;
     }
 
     public static void main(String[] args) throws Exception {

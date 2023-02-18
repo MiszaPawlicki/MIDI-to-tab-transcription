@@ -295,7 +295,7 @@ public class GeneticAlgorithm {
     }
 
     //method to run all steps in the genetic algorithm
-    public GuitarTab runGeneticAlgorithm(String path, int iterations) throws Exception {
+    public GuitarTab runGeneticAlgorithm(String path, int iterations, int populationSize, int numberOfSelections, double crossover, int interval, int runLength, int range) throws Exception {
         generatePopulation(100,path);
 
         for(int i = 0; i<iterations;i++){
@@ -307,7 +307,7 @@ public class GeneticAlgorithm {
             calculateEachMemberFitness();
             Arrays.sort(population);
 
-            if(checkFitnessMonotony(i, 200, 25)){
+            if(checkFitnessMonotony(i, 100, 100,10)){
                 break;
             }
         }
@@ -316,7 +316,7 @@ public class GeneticAlgorithm {
         return population[0];
     }
 
-    public boolean checkFitnessMonotony(int i, int interval, int runLength){
+    public boolean checkFitnessMonotony(int i, int interval, int runLength, int range){
         /*
             Function to check if there is little to no change in generational fitness. Returns true if no change else
             false
@@ -324,18 +324,36 @@ public class GeneticAlgorithm {
             i: iteration number,
             interval: number of iterations between each check
             runLength: number of consecutive generational fitness scores to be checked
+            range: the allowable difference between the highest and lowest fitness values of a run
         */
         if(i%interval == 0 && i>0){//this number would be scaled to the size of the track
-            double dblCurrentGeneration =  (generational_fitness.get(generational_fitness.size()-1));
-            int currentGeneration = (int) dblCurrentGeneration;
-            for(int j = 0; j<runLength; j++){
-                double foo = generational_fitness.get((i-j));
-                int bar = (int)foo;
-                if((bar!=currentGeneration)&&(bar!=currentGeneration-1)&&(bar!=currentGeneration+1)){
-                    return false;
+            double totalFitness = 0;
+            double averageFitness;
+            double highestFitness = 0;
+            double lowestFitness = generational_fitness.get(generational_fitness.size()-1);
+            double currentFitness = 0;
+
+            for(int j = i; j>(i-runLength); j--){
+                currentFitness = generational_fitness.get(j);
+                if(currentFitness<lowestFitness){
+                    lowestFitness = currentFitness;
+                }
+                if(currentFitness>highestFitness){
+                    highestFitness = currentFitness;
+                }
+                totalFitness+=currentFitness;
+            }
+
+            averageFitness = totalFitness/runLength;
+
+            //want to check that the average fitness is within 5 of the lowest and highest
+
+            if((lowestFitness+range)>=highestFitness){
+                if(averageFitness>=lowestFitness&&averageFitness<=highestFitness){
+                    return true;
                 }
             }
-            return true;
+            return false;
         }
         return false;
     }
