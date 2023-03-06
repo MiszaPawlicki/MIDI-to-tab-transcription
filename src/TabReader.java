@@ -234,6 +234,9 @@ public class TabReader {
             for(int i=0; i<grandTruthRows.length; i++){
                 if(generatedTabRows[i].stripTrailing().equals(grandTruthRows[i].stripTrailing())){
                     counter++;
+                }else{
+                    System.out.println("gen: "+generatedTabRows[i].stripTrailing());
+                    System.out.println("GT: "+grandTruthRows[i].stripTrailing());
                 }
             }
 

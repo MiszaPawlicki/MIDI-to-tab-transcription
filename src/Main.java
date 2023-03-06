@@ -15,9 +15,9 @@ public class Main {
         int runLength = 100; // number of fitness scores checked to see if flattening out
         int range = 10; // max range between highest and lowest fitness scores when checking if fitness is flattening
 
-        //PATHS
-        String path = "F_da_Milano\\MIDI\\001_FMRicercar01.mid";
-        String tabPath = "F_da_Milano\\TAB\\001_FMRicercar01.tab";
+        /*//PATHS
+        String path = "F_da_Milano/MIDI/008_Francesco-Recercata-8.mid";
+        String tabPath = "F_da_Milano/TAB/008_Francesco-Recercata-8.tab";
 
         //RUNNING THE GA
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
@@ -25,9 +25,9 @@ public class Main {
         //System.out.println(TabReader.convertGeneratedTab(tab.allStrings));
 
         //COMPARING GA VS HUMAN WRITTEN TAB
-        TabReader.compare(tabPath, TabReader.convertGeneratedTab(tab.allStrings));
+        TabReader.compare(tabPath, TabReader.convertGeneratedTab(tab.allStrings));*/
 
-        //checkDatabase("F_da_Milano/MIDI","F_da_Milano/TAB",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        checkDatabase("F_da_Milano/MIDI","F_da_Milano/TAB",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
 
     }
 

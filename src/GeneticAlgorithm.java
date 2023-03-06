@@ -1,14 +1,64 @@
 import javax.sound.midi.InvalidMidiDataException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class GeneticAlgorithm {
 
     private static GuitarTab[] population;
     private static ArrayList<Double> generational_fitness = new ArrayList<>();
     protected static MidiFileReader midiFileReader;
+    private static HashMap<int[], String> chordDictionary = new HashMap<>();
+
+    private void populateChordDictionary(){
+        chordDictionary.put(new int[]{0, 2, 2, 2, 0, 0},"G-Major");//gmajor
+        chordDictionary.put(new int[]{0, 2, 2, 1, 0, 0},"G-Minor");//gminor
+        chordDictionary.put(new int[]{0, 2, 0, 2, 3, 0},"G-Dom7");//gdom7
+        chordDictionary.put(new int[]{0, 2, 2, 1, 3, 0},"G-Minor7");//gminor7
+        chordDictionary.put(new int[]{0, 2, 1, 2, 0, 0},"G-Major7");//gmajor7
+        chordDictionary.put(new int[]{0, 2, 2, 2, 2, 0},"G-Major6");//gmajor6
+
+        chordDictionary.put(new int[]{0, 0, 2, 3, 2, 0},"C-Major");//cmajor
+        chordDictionary.put(new int[]{0, 0, 2, 3, 1, 0},"C-Minor");//cminor
+        chordDictionary.put(new int[]{0, 0, 2, 1, 2, 0},"C-Dom7");//cdom7
+        chordDictionary.put(new int[]{0, 0, 2, 1, 1, 0},"C-Minor7");//cminor7
+        chordDictionary.put(new int[]{0, 0, 2, 2, 2, 0},"C-Major7");//cmajor7
+        chordDictionary.put(new int[]{0, 0, 2, 3, 2, 2},"C-Major6");//cmajor6
+
+        chordDictionary.put(new int[]{-1, 0, 0, 3, 3, 2},"F-Major");//fmajor
+        chordDictionary.put(new int[]{-1, 0, 0, 3, 3, 1},"F-Minor");//fminor
+        chordDictionary.put(new int[]{-1, 0, 0, 3, 1, 2},"F-Dom7");//fdom7
+        chordDictionary.put(new int[]{-1, 0, 0, 3, 1, 1},"F-Minor7");//fminor7
+        chordDictionary.put(new int[]{-1, 0, 0, 3, 2, 2},"F-Major7");//fmajor7
+        chordDictionary.put(new int[]{-1, 0, 0, 3, 0, 2},"F-Major6");//fmajor6
+
+        chordDictionary.put(new int[]{3, 2, 0, 1, 0, 3},"A#-Major");
+        chordDictionary.put(new int[]{3, 1, 0, 1, 3, 3},"A#-Minor");
+        chordDictionary.put(new int[]{3, 2, 0, 1, 3, 1},"A#-Dom7");
+        chordDictionary.put(new int[]{3, -1, 3, 4, 3, 3},"A#-Minor7");
+        chordDictionary.put(new int[]{-1, 2, 0, 1, 0, 2},"A#-Major7");
+        chordDictionary.put(new int[]{3, 2, 0, 1, 0, 0},"A#-Major6");
+
+        chordDictionary.put(new int[]{0, 3, 2, 1, 1, 3},"D#-Major");//
+        chordDictionary.put(new int[]{-1, 3, 1, 1, 1, 3},"D#-Minor");//
+        chordDictionary.put(new int[]{-1, 3, 2, 4, 1, 0},"D#-Dom7");//
+        chordDictionary.put(new int[]{-1, 3, -1, 4, 4, 3},"D#-Minor7");//
+        chordDictionary.put(new int[]{-1, 3, 2, 1, 0, 0},"D#-Major7");//
+        chordDictionary.put(new int[]{-1, 3, 2, 3, 1, 0},"D#-Major6");//
+
+        chordDictionary.put(new int[]{-1, 3, 3, 3, 1, 1},"G#-Major");//
+        chordDictionary.put(new int[]{-1, 3, 3, 2, 1, 1},"G#-Minor");//
+        chordDictionary.put(new int[]{-1, 3, 1, 3, 1, 1},"G#-Dom7");//
+        chordDictionary.put(new int[]{-1, 3, 1, 2, 1, 1},"G#-Minor7");//
+        chordDictionary.put(new int[]{-1, 0, 3, 3, 1, 0},"G#-Major7");//
+        chordDictionary.put(new int[]{-1, 0, 3, 3, 3, 1},"G#-Major6");//
+
+        chordDictionary.put(new int[]{2, 2, 1, 0, 0, 2},"D-Major");//
+        chordDictionary.put(new int[]{2, 2, 0, 0, 0, 2},"D-Minor");//
+        chordDictionary.put(new int[]{2, 0, 1, 0, 0, 2},"D-Dom7");//
+        chordDictionary.put(new int[]{2, 0, 0, 0, 0, 2},"D-Minor7");//
+        chordDictionary.put(new int[]{-1, 2, 4, 4, 4, 2},"D-Major7");//
+        chordDictionary.put(new int[]{2, 2, 1, 0, 0, 2},"D-Major6");//
+    }
 
     //reading the midi file
     private static void readMidiFile(String path) throws Exception {
@@ -43,13 +93,13 @@ public class GeneticAlgorithm {
                 if(note.tick!=currentTick){
                     if(currentSimultaneousNotes==null){
                         currentSimultaneousNotes = getSimultaneousNotes((int)note.tick, guitarTab);
-                        totalDistance+=penaliseSparseNotes(currentSimultaneousNotes);
+                        totalDistance+= chordDifficulty(currentSimultaneousNotes);
                         currentTick = note.tick;
                     }else{
                         previousSimultaneousNotes = currentSimultaneousNotes;
                         currentSimultaneousNotes = getSimultaneousNotes((int)note.tick, guitarTab);
-                        distance = euclidianDistance(previousSimultaneousNotes, currentSimultaneousNotes);
-                        totalDistance+=penaliseSparseNotes(currentSimultaneousNotes);
+                        distance = euclideanDistance(previousSimultaneousNotes, currentSimultaneousNotes);
+                        totalDistance+= chordDifficulty(currentSimultaneousNotes);
                         totalDistance+=distance;
                     }
                 }
@@ -62,7 +112,7 @@ public class GeneticAlgorithm {
 
     }
 
-    public static int penaliseSparseNotes(int[] currentNotes){
+    public static int chordDifficulty(int[] currentNotes){
         /*
             A function to penalise fitness if notes are further than 4 frets apart whilst being played simultaneously
         */
@@ -72,9 +122,10 @@ public class GeneticAlgorithm {
         if(!((int) Arrays.stream(currentNotes).filter(i -> i == -1).count()>=5)){
             //for each note check if the distance between any other note being played simultaneously is greater than 4
             for(int note1 : currentNotes){
-                if(note1!=-1){
+                if(note1!=-1&&note1!=0){
                     for(int note2 : currentNotes){
-                        if(note2!=-1){
+                        if(note2!=-1&&note2!=0){
+
                             if(note1>note2){
                                 if((note1-note2)>=5){
                                     penalty+= (note1-note2)*penaltyModifier;
@@ -82,13 +133,36 @@ public class GeneticAlgorithm {
                             }else if((note2-note1)>=5){
                                 penalty+= (note2-note1)*penaltyModifier;
                             }
+
+
                         }
                     }
                 }
             }
         }
 
+
+
         return penalty;
+        /*ArrayList<Integer> notes = new ArrayList<Integer>();
+        for(int i=0; i<currentNotes.length; i++){
+            if(currentNotes[i]!=-1){
+                //add fret and string to list
+            }
+        }
+        double sum = 0;
+        int count = 0;
+        for (int i = 0; i < currentNotes.length; i++) {
+            if (currentNotes[i] != -1) {
+                sum += Math.pow(currentNotes[i] - i, 2);
+                count++;
+            }
+        }
+        return (int)Math.sqrt(sum / count)+penalty;*/
+
+
+
+
     }
 
     // a function to get all notes played simultaneously
@@ -118,7 +192,7 @@ public class GeneticAlgorithm {
     }
 
     // a function to calculate the euclidean distance between two arrays
-    private static double euclidianDistance(int[] x, int[] y){//for single notes
+    private static double euclideanDistance(int[] x, int[] y){//for single notes
 
         int xCounter = 0;
         int yCounter = 0;
@@ -296,18 +370,19 @@ public class GeneticAlgorithm {
 
     //method to run all steps in the genetic algorithm
     public GuitarTab runGeneticAlgorithm(String path, int iterations, int populationSize, int numberOfSelections, double crossover, int interval, int runLength, int range) throws Exception {
-        generatePopulation(100,path);
+        populateChordDictionary();
+        generatePopulation(populationSize,path);
 
         for(int i = 0; i<iterations;i++){
             calculateEachMemberFitness();
-            ArrayList<Integer> indexesOfFittest = tournamentSelection(50);
+            ArrayList<Integer> indexesOfFittest = tournamentSelection(numberOfSelections);
             calculateGenerationFitness();
-            System.out.println("i: "+i+" "+generational_fitness.get(i));
-            reproduce(indexesOfFittest,0.3);
+            //System.out.println("i: "+i+" "+generational_fitness.get(i));
+            reproduce(indexesOfFittest,crossover);
             calculateEachMemberFitness();
             Arrays.sort(population);
 
-            if(checkFitnessMonotony(i, 100, 100,10)){
+            if(checkFitnessMonotony(i, interval, runLength,range)){
                 break;
             }
         }
