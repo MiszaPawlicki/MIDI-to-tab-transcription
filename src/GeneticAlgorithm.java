@@ -377,7 +377,7 @@ public class GeneticAlgorithm {
             calculateEachMemberFitness();
             ArrayList<Integer> indexesOfFittest = tournamentSelection(numberOfSelections);
             calculateGenerationFitness();
-            //System.out.println("i: "+i+" "+generational_fitness.get(i));
+            System.out.println("i: "+i+" "+generational_fitness.get(i));
             reproduce(indexesOfFittest,crossover);
             calculateEachMemberFitness();
             Arrays.sort(population);

@@ -1,11 +1,9 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class TabReader {
-
 
     public static String convertGeneratedTab(int[][] tab) throws Exception {
         int length = tab[0].length;
@@ -22,13 +20,14 @@ public class TabReader {
                 //loop through each note and convert fret number to fret letter
                 for (int note : currentNotes){
                     if(note!=-1){
-                        line+=tabNumToChar(note);
+                        line+= tabNumToNum(note);
                     }else{
                         line+=" ";
                     }
                 }
 
                 //append fret letter to line
+                //line = new StringBuffer(line).reverse().toString();
                 line+="\n";
                 fullTab+=line;
             }
@@ -48,7 +47,7 @@ public class TabReader {
         return false;
     }
 
-    private static String tabNumToChar(int fretNum) throws Exception {
+    private static String tabNumToNum(int fretNum) throws Exception {
         /*
             Convert int fret number to equivalent fret char
         */
@@ -76,29 +75,45 @@ public class TabReader {
             case 10:
                 return "10";
 
+
         }
         throw new Exception();
     }
 
-    public static String parseTabFile(String fileContents){
+    public static int tabCharToNum(char fretChar) throws Exception {
+        /*
+            Convert int fret number to equivalent fret char
+        */
+        switch (fretChar){
+            case 'a':
+                return 0;
+            case 'b':
+                return 1;
+            case 'c':
+                return 2;
+            case 'd':
+                return 3;
+            case 'e':
+                return 4;
+            case 'f':
+                return 5;
+            case 'g':
+                return 6;
+            case 'h':
+                return 7;
+            case 'i':
+                return 8;
+            case 'k':
+                return 9;
+            case 'l':
+                return 10;
 
-        String[] lines = fileContents.split("\n");
 
-        String cleanedTab = "";
-        String cleanedLine = "";
-        for(String line : lines){
-            if(checkLine(line)){
-                cleanedLine = filterLine(line);
-                if(!cleanedLine.equals("\n")){
-                    cleanedTab+=cleanedLine;
-                }
-            }
         }
-
-        return cleanedTab;
+        return -1;
     }
 
-    public static String parseTabFile2(String fileContents){
+    public static String parseTabFile(String fileContents,boolean nums){
         String[] lines = fileContents.split("\n");
 
         /*
@@ -116,7 +131,13 @@ public class TabReader {
                     if(line.length()>0){
                         // if line begins with %, skip
                         // remove all non numeric chars or spaces
-                        line = line.replaceAll("[^0-9\s]+", "");
+                        if(nums){
+                            line = line.replaceAll("[^0-9\s]+", "");
+                        }
+                        else{
+                            line = line.replaceAll("[^a-l\s]+", "");
+                        }
+
                         //line=line.stripTrailing();
                         //line = new StringBuffer(line).reverse().toString();
                         if(line.stripTrailing()!=""){
@@ -127,103 +148,18 @@ public class TabReader {
                 }
 
             }
-
-
-
         }
 
         return cleanedTab;
     }
 
-    private static boolean checkLine(String line){
-        /*
-            Function to check if line contains fretting information
-        */
-        if(line==""){
-            return false;
-        }
-        if(line.charAt(0)=='{'){
-            return false;
-        }
-        if(line.charAt(0)=='b'&&line.length()==1){
-            return false;
-        }
-        if(line.charAt(0)=='\n'){
-            return false;
-        }
-        if(line.charAt(0)=='%'){
-            return false;
-        }
-        if(line.length()>9){
-            return false;
-        }
-        if(line.length()<=1){
-            return false;
-        }
-
-
-
-        return true;
-    }
-
-    private static String filterLine(String line){
-        /*
-            Function that takes a line and returns only the fretting information
-        */
-
-        String cleanString = "";
-        ArrayList<Character> letters = new ArrayList<Character>(Arrays.asList('x','X', 'Y', 'v','Q','B'));
-        ArrayList<Character> primarySymbols = new ArrayList<Character>(Arrays.asList('#'));
-        ArrayList<Character> secondarySymbols = new ArrayList<Character>(Arrays.asList('-','.'));
-        ArrayList<Character> numbers = new ArrayList<Character>(Arrays.asList('0','1','2','3','4','5','6','7','8','0'));
-
-        char currentChar;
-
-        for(int i = line.length()-1; i>=0; i--){
-            currentChar = line.charAt(i);
-            if(primarySymbols.contains(currentChar)){
-                break;
-            }else if(numbers.contains(currentChar)){
-                break;
-            }else if(secondarySymbols.contains(currentChar)){
-                break;
-            }else if(letters.contains(currentChar)){
-                break;
-            }
-
-            if(currentChar==' '){
-                cleanString+=" ";
-            }else{
-                cleanString+=currentChar;
-            }
-
-
-        }
-        cleanString = new StringBuffer(cleanString).reverse().toString();
-        if (!cleanString.trim().isEmpty()) {
-            cleanString+="\n";
-        }
-
-
-        return cleanString;
-    }
-
-    public static String filter(ArrayList<Character> filters, String line){
-        if(line.length()!=0){
-            if(filters.contains(line.charAt(0))){
-                line=line.substring(1);
-            }
-        }
-
-        return line;
-    }
 
     public static double compare(String path,String generatedTab) throws IOException {
         //NEED FILE PATH TO TAKE PARAMETER AND NOT STING LITERAL
 
         Path filePath = Path.of(path);
         String content = Files.readString(filePath);
-        String grandTruth = parseTabFile2(content);
+        String grandTruth = parseTabFile(content, true);
 
         String[] grandTruthRows = grandTruth.trim().split("\n");
         String[] generatedTabRows = generatedTab.trim().split("\n");
@@ -256,7 +192,7 @@ public class TabReader {
         String content = Files.readString(filePath);
 
 
-        System.out.println(parseTabFile(content));
+        System.out.println(parseTabFile(content,false));
 
     }
 }
