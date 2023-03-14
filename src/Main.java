@@ -32,8 +32,6 @@ public class Main {
 
         //checkDatabase("F_da_Milano/MIDI","F_da_Milano/TAB",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
 
-        //convertTabFileToNumberFormat("Galilei/TAB/180b_Contrapunto_secondo_sopran.tab");
-
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
@@ -75,7 +73,10 @@ public class Main {
     }
 
     public static String convertTabFileToNumberFormat(String path) throws Exception {
+        /*
+            Function to convert char based tab to num based tab
 
+        */
         String content = Files.readString(Path.of(path));
         String[] lines = content.split("\n");
 
