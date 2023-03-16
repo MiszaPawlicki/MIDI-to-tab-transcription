@@ -7,9 +7,10 @@ public class GeneticAlgorithm {
     private static GuitarTab[] population;
     private static ArrayList<Double> generational_fitness = new ArrayList<>();
     protected static MidiFileReader midiFileReader;
-    private static HashMap<int[], String> chordDictionary = new HashMap<>();
+    //private static HashMap<int[], String> chordDictionary = new HashMap<>();
+    public static HashSet<int[]> chordDictionary = new HashSet<>();
 
-    private void populateChordDictionary(){
+    /*private void populateChordDictionary(){
         chordDictionary.put(new int[]{0, 2, 2, 2, 0, 0},"G-Major");//gmajor
         chordDictionary.put(new int[]{0, 2, 2, 1, 0, 0},"G-Minor");//gminor
         chordDictionary.put(new int[]{0, 2, 0, 2, 3, 0},"G-Dom7");//gdom7
@@ -58,6 +59,58 @@ public class GeneticAlgorithm {
         chordDictionary.put(new int[]{2, 0, 0, 0, 0, 2},"D-Minor7");//
         chordDictionary.put(new int[]{-1, 2, 4, 4, 4, 2},"D-Major7");//
         chordDictionary.put(new int[]{2, 2, 1, 0, 0, 2},"D-Major6");//
+    }*/
+
+    private void populateChordDictionary(){
+
+        chordDictionary.add(new int[]{0, 2, 2, 2, 0, 0});//G-Major");//gmajor
+        chordDictionary.add(new int[]{0, 2, 2, 1, 0, 0});//G-Minor");//gminor
+        chordDictionary.add(new int[]{0, 2, 0, 2, 3, 0});//G-Dom7");//gdom7
+        chordDictionary.add(new int[]{0, 2, 2, 1, 3, 0});//G-Minor7");//gminor7
+        chordDictionary.add(new int[]{0, 2, 1, 2, 0, 0});//G-Major7");//gmajor7
+        chordDictionary.add(new int[]{0, 2, 2, 2, 2, 0});//G-Major6");//gmajor6
+
+        chordDictionary.add(new int[]{0, 0, 2, 3, 2, 0});//C-Major");//cmajor
+        chordDictionary.add(new int[]{0, 0, 2, 3, 1, 0});//C-Minor");//cminor
+        chordDictionary.add(new int[]{0, 0, 2, 1, 2, 0});//C-Dom7");//cdom7
+        chordDictionary.add(new int[]{0, 0, 2, 1, 1, 0});//C-Minor7");//cminor7
+        chordDictionary.add(new int[]{0, 0, 2, 2, 2, 0});//C-Major7");//cmajor7
+        chordDictionary.add(new int[]{0, 0, 2, 3, 2, 2});//C-Major6");//cmajor6
+
+        chordDictionary.add(new int[]{-1, 0, 0, 3, 3, 2});//F-Major");//fmajor
+        chordDictionary.add(new int[]{-1, 0, 0, 3, 3, 1});//F-Minor");//fminor
+        chordDictionary.add(new int[]{-1, 0, 0, 3, 1, 2});//F-Dom7");//fdom7
+        chordDictionary.add(new int[]{-1, 0, 0, 3, 1, 1});//F-Minor7");//fminor7
+        chordDictionary.add(new int[]{-1, 0, 0, 3, 2, 2});//F-Major7");//fmajor7
+        chordDictionary.add(new int[]{-1, 0, 0, 3, 0, 2});//F-Major6");//fmajor6
+
+        chordDictionary.add(new int[]{3, 2, 0, 1, 0, 3});//A#-Major");
+        chordDictionary.add(new int[]{3, 1, 0, 1, 3, 3});//A#-Minor");
+        chordDictionary.add(new int[]{3, 2, 0, 1, 3, 1});//A#-Dom7");
+        chordDictionary.add(new int[]{3, -1, 3, 4, 3, 3});//A#-Minor7");
+        chordDictionary.add(new int[]{-1, 2, 0, 1, 0, 2});//A#-Major7");
+        chordDictionary.add(new int[]{3, 2, 0, 1, 0, 0});//A#-Major6");
+
+        chordDictionary.add(new int[]{0, 3, 2, 1, 1, 3});//D#-Major");//
+        chordDictionary.add(new int[]{-1, 3, 1, 1, 1, 3});//D#-Minor");//
+        chordDictionary.add(new int[]{-1, 3, 2, 4, 1, 0});//D#-Dom7");//
+        chordDictionary.add(new int[]{-1, 3, -1, 4, 4, 3});//D#-Minor7");//
+        chordDictionary.add(new int[]{-1, 3, 2, 1, 0, 0});//D#-Major7");//
+        chordDictionary.add(new int[]{-1, 3, 2, 3, 1, 0});//D#-Major6");//
+
+        chordDictionary.add(new int[]{-1, 3, 3, 3, 1, 1});//G#-Major");//
+        chordDictionary.add(new int[]{-1, 3, 3, 2, 1, 1});//G#-Minor");//
+        chordDictionary.add(new int[]{-1, 3, 1, 3, 1, 1});//G#-Dom7");//
+        chordDictionary.add(new int[]{-1, 3, 1, 2, 1, 1});//G#-Minor7");//
+        chordDictionary.add(new int[]{-1, 0, 3, 3, 1, 0});//G#-Major7");//
+        chordDictionary.add(new int[]{-1, 0, 3, 3, 3, 1});//G#-Major6");//
+
+        chordDictionary.add(new int[]{2, 2, 1, 0, 0, 2});//D-Major");//
+        chordDictionary.add(new int[]{2, 2, 0, 0, 0, 2});//D-Minor");//
+        chordDictionary.add(new int[]{2, 0, 1, 0, 0, 2});//D-Dom7");//
+        chordDictionary.add(new int[]{2, 0, 0, 0, 0, 2});//D-Minor7");//
+        chordDictionary.add(new int[]{-1, 2, 4, 4, 4, 2});//D-Major7");//
+        chordDictionary.add(new int[]{2, 2, 1, 0, 0, 2});//D-Major6");//
     }
 
     //reading the midi file
@@ -121,20 +174,34 @@ public class GeneticAlgorithm {
         //check there are at least two notes being played
         if(!((int) Arrays.stream(currentNotes).filter(i -> i == -1).count()>=5)){
             //for each note check if the distance between any other note being played simultaneously is greater than 4
-            for(int note1 : currentNotes){
-                if(note1!=-1&&note1!=0){
-                    for(int note2 : currentNotes){
-                        if(note2!=-1&&note2!=0){
+            boolean found = false;
 
-                            if(note1>note2){
-                                if((note1-note2)>=5){
-                                    penalty+= (note1-note2)*penaltyModifier;
+            // chord dictionary
+            /*for (int[] arr : chordDictionary) {
+                if (Arrays.equals(arr, currentNotes)) {
+                    penalty=0;
+                    found = true;
+                    break;
+                }
+            }*/
+
+            //modifiable penalty when fretting seraration over n
+            if(!found){
+                for(int note1 : currentNotes){
+                    if(note1!=-1&&note1!=0){
+                        for(int note2 : currentNotes){
+                            if(note2!=-1&&note2!=0){
+
+                                if(note1>note2){
+                                    if((note1-note2)>=5){
+                                        penalty+= (note1-note2)*penaltyModifier;
+                                    }
+                                }else if((note2-note1)>=5){
+                                    penalty+= (note2-note1)*penaltyModifier;
                                 }
-                            }else if((note2-note1)>=5){
-                                penalty+= (note2-note1)*penaltyModifier;
+
+
                             }
-
-
                         }
                     }
                 }
@@ -144,6 +211,8 @@ public class GeneticAlgorithm {
 
 
         return penalty;
+
+        //penalty based on euclidean distance
         /*ArrayList<Integer> notes = new ArrayList<Integer>();
         for(int i=0; i<currentNotes.length; i++){
             if(currentNotes[i]!=-1){
