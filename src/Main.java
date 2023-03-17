@@ -19,8 +19,8 @@ public class Main {
         int range = 10; // max range between highest and lowest fitness scores when checking if fitness is flattening
 
         //PATHS
-        String path = "Tabs/Valderrabano/MIDI/Valderrabano_Soneto_5.mid";
-        String tabPath = "Tabs/Valderrabano/TAB/Valderrabano_Soneto_5.tab";
+        String path = "Tabs/Spinacino/MIDI/Spinacino_bassadans.mid";
+        String tabPath = "Tabs/Spinacino/TAB/Spinacino_bassadans.tab";
 
         //RUNNING THE GA
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
@@ -29,8 +29,7 @@ public class Main {
 
         //COMPARING GA VS HUMAN WRITTEN TAB
         TabReader.compare(tabPath, TabReader.convertGeneratedTab(tab.allStrings));
-
-        //convertTabFileToNumberFormat("Tabs/Valderrabano/TAB/Valderrabano_Soneto_5.tab");
+        convertTabFileToNumberFormat("Tabs/Spinacino/TAB/Spinacino.tab");
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
