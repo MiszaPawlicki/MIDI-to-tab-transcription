@@ -1,263 +1,182 @@
-{Soneto, Enriquez de Valderrabano, 1547}
-
-
-
-b
-T
-1c da
-x d  c
-xa d e
-b
-xc da
-xf
-x dff
-b
-0c da
-1 d
-b
-xc da
-x d  c
-xa d e
-b
-xc da
-xf
-x dff
-b
-xc da
-2 d
-x   c
-x   a
-x    e
-b
-1 d ac
-xc
-xd   c
-b
-xf  ca
-2  d
-xd
-xc
-xa
-b
-1c d
-xacd
-x ea
-b
-xaa c
-x  de
-xaac
-b
-
-b
-1 cd a
-2    a
-x  b
-1 da
-b
-x c ca
-2  d
-x a
-x c
-x d
-b
-1 cd a
-2    a
-x  b
-1 da
-b
-0 c ca
-1  d
-b
-x c  a
-x d  c
-xa d e
-b
-0c da
-1 d
-b
-xcd a
-xac
-xda
-b
-0c da
-1 d
-b
-xcd a
-xac
-xda
-b
-xc da
-x d  c
-xc da
-b
-
-b
-2a  c
-x d
-x c
-x a
-1  de
-b
-2 ab
-x     d
-x  d
-x  b
-1  a
-b
-x   ca
-x     d
-x d a c
-b
-xa    a
-x    c
-xa d e
-b
-xc da
-x d  c
-xc da
-b
-2a  c
-x d
-x c
-x a
-1  de
-b
-2 ab
-x     d
-x  d
-x  b
-1  a
-b
-x   ca
-x     d
-x d a c
-b
-xa    a
-x    c
-xa d e
-b
-y dda
-bbb
-
-{Soneto, Enriquez de Valderrabano, 1547}
-
-b
-T
-1cd a
-2a
-x d
-x c
-x a
-b
-1ac  a
-x  d
-xcd a
-b
-xdf  d
-x   f
-x  da
-b
-xc d
-2a c
-x d
-x c
-x a
-b
-0 c  a
-1  d
-b
-xcd a
-2a
-x d
-x c
-x a
-b
-1ac  a
-x  d
-xcd a
-b
-xdf  d
-x   f
-x  da
-b
-
- 
-b
-1c d
-2a c
-x d
-x c
-x a
-b
-0 c  a
-1  d
-b
-1. abc
-2  aa
-1 abc
-b
-x aa c
-x   c
-x  aa
-b
-x ab  d
-x d
-xa    d
-b
-x  de c
-2f
-x   c
-xd da
-xc
-b
-1d  c
-xad  a
-x c
-b
-0 d a
-1  d
-b
-1. abc
-2  aa
-1 abc
-b
-
-
-b
-1 aa c
-x   c
-x  aa
-b
-x ab  d
-x d
-xa    d
-b
-x  de c
-2f
-x   c
-xd da
-xc
-b
-1d  c
-xad  a
-x c
-b
-y dda
-bb
-b
-Q
-1!
-1!
-1!
-1!
-1!
-1!
-1!
-1!
-1!
-
-
-e
-
-
-
+x  03 2
+x 2  3 
+x 4 3 0
+x  03 2
+x     5
+x  553 
+x  03 2
+x    3 
+x  03 2
+x 2  3 
+x 4 3 0
+x  03 2
+x     5
+x  553 
+x  03 2
+x    3 
+x  2   
+x  0   
+x 4    
+x 20 3 
+x     2
+x 2   3
+x 02  5
+x   3  
+x     3
+x     2
+x     0
+x   3 2
+x   320
+x   04 
+x  2 00
+x  43  
+x   200
+x 0 32 
+x 0    
+x   1  
+x   03 
+x 02 2 
+x   3  
+x    0 
+x    2 
+x    3 
+x 0 32 
+x 0    
+x   1  
+x   03 
+x 02 2 
+x   3  
+x 0  2 
+x 2  3 
+x 4 3 0
+x  03 2
+x    3 
+x  0 32
+x    20
+x    03
+x  03 2
+x    3 
+x  0 32
+x    20
+x    03
+x  03 2
+x 2  3 
+x  03 2
+x  2  0
+x    3 
+x    2 
+x    0 
+x  43  
+x   10 
+x3     
+x   3  
+x   1  
+x   0  
+x 02   
+x3     
+x2 0 3 
+x0    0
+x 2    
+x 4 3 0
+x  03 2
+x 2  3 
+x  03 2
+x  2  0
+x    3 
+x    2 
+x    0 
+x  43  
+x   10 
+x3     
+x   3  
+x   1  
+x   0  
+x 02   
+x3     
+x2 0 3 
+x0    0
+x 2    
+x 4 3 0
+x  033 
+x  0 32
+x     0
+x    3 
+x    2 
+x    0 
+x 0  20
+x   3  
+x  0 32
+x 3  53
+x  5   
+x  03  
+x   3 2
+x   2 0
+x    3 
+x    2 
+x    0 
+x 0  2 
+x   3  
+x  0 32
+x     0
+x    3 
+x    2 
+x    0 
+x 0  20
+x   3  
+x  0 32
+x 3  53
+x  5   
+x  03  
+x   3 2
+x   2 0
+x    3 
+x    2 
+x    0 
+x 0  2 
+x   3  
+x  210 
+x  00  
+x  210 
+x 2 00 
+x  2   
+x  00  
+x3  10 
+x    3 
+x3    0
+x2 43  
+x     5
+x  2   
+x  03 3
+x     2
+x  2  3
+x 0  30
+x    2 
+x  0 3 
+x   3  
+x  210 
+x  00  
+x  210 
+x 2 00 
+x  2   
+x  00  
+x3  10 
+x    3 
+x3    0
+x2 43  
+x     5
+x  2   
+x  03 3
+x     2
+x  2  3
+x 0  30
+x    2 
+x  033 
+x   3   
+x   3   
+x   3   
+x   3   
+x   3   
+x   3   
+x   3   
+x   3   
+x   3   
