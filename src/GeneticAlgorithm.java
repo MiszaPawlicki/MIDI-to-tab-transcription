@@ -146,13 +146,13 @@ public class GeneticAlgorithm {
                 if(note.tick!=currentTick){
                     if(currentSimultaneousNotes==null){
                         currentSimultaneousNotes = getSimultaneousNotes((int)note.tick, guitarTab);
-                        totalDistance+= chordDifficulty(currentSimultaneousNotes);
+                        //totalDistance+= chordDifficulty(currentSimultaneousNotes);
                         currentTick = note.tick;
                     }else{
                         previousSimultaneousNotes = currentSimultaneousNotes;
                         currentSimultaneousNotes = getSimultaneousNotes((int)note.tick, guitarTab);
                         distance = euclideanDistance(previousSimultaneousNotes, currentSimultaneousNotes);
-                        totalDistance+= chordDifficulty(currentSimultaneousNotes);
+                        //totalDistance+= chordDifficulty(currentSimultaneousNotes);
                         totalDistance+=distance;
                     }
                 }
@@ -169,67 +169,32 @@ public class GeneticAlgorithm {
         /*
             A function to penalise fitness if notes are further than 4 frets apart whilst being played simultaneously
         */
-        int penalty = 0;
-        double penaltyModifier = 1;
-        //check there are at least two notes being played
+
         if(!((int) Arrays.stream(currentNotes).filter(i -> i == -1).count()>=5)){
-            //for each note check if the distance between any other note being played simultaneously is greater than 4
-            boolean found = false;
+            //penalty based on euclidean distance
+            ArrayList<Integer> notes = new ArrayList<Integer>();
 
-            // chord dictionary
-            /*for (int[] arr : chordDictionary) {
-                if (Arrays.equals(arr, currentNotes)) {
-                    penalty=0;
-                    found = true;
-                    break;
-                }
-            }*/
-
-            //modifiable penalty when fretting seraration over n
-            if(!found){
-                for(int note1 : currentNotes){
-                    if(note1!=-1&&note1!=0){
-                        for(int note2 : currentNotes){
-                            if(note2!=-1&&note2!=0){
-
-                                if(note1>note2){
-                                    if((note1-note2)>=5){
-                                        penalty+= (note1-note2)*penaltyModifier;
-                                    }
-                                }else if((note2-note1)>=5){
-                                    penalty+= (note2-note1)*penaltyModifier;
-                                }
+            double sum = 0;
+            int count = 0;
 
 
-                            }
-                        }
+            for (int i = 0; i < currentNotes.length; i++) {
+                if (currentNotes[i] != -1) {
+                    if (currentNotes[i] != 0){
+                        sum += Math.pow(currentNotes[i] - i, 2);
+                        count++;
+                    }else{
+                        sum += Math.pow(currentNotes[i] - i, 2)/2;
+                        count++;
+
                     }
+
                 }
             }
+
+            return (int)Math.sqrt(sum / count);
         }
-
-
-
-        return penalty;
-
-        //penalty based on euclidean distance
-        /*ArrayList<Integer> notes = new ArrayList<Integer>();
-        for(int i=0; i<currentNotes.length; i++){
-            if(currentNotes[i]!=-1){
-                //add fret and string to list
-            }
-        }
-        double sum = 0;
-        int count = 0;
-        for (int i = 0; i < currentNotes.length; i++) {
-            if (currentNotes[i] != -1) {
-                sum += Math.pow(currentNotes[i] - i, 2);
-                count++;
-            }
-        }
-        return (int)Math.sqrt(sum / count)+penalty;*/
-
-
+        return 0;
 
 
     }
@@ -446,7 +411,7 @@ public class GeneticAlgorithm {
             calculateEachMemberFitness();
             ArrayList<Integer> indexesOfFittest = tournamentSelection(numberOfSelections);
             calculateGenerationFitness();
-            System.out.println("i: "+i+" "+generational_fitness.get(i));
+            //System.out.println("i: "+i+" "+generational_fitness.get(i));
             reproduce(indexesOfFittest,crossover);
             calculateEachMemberFitness();
             Arrays.sort(population);

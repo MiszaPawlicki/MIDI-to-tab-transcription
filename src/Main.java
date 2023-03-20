@@ -2,10 +2,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 
 public class Main {
-
+    public static ArrayList<Double> accs = new ArrayList<Double>();
 
     public static void main(String[] args) throws Exception {
 
@@ -18,7 +19,7 @@ public class Main {
         int runLength = 100; // number of fitness scores checked to see if flattening out
         int range = 10; // max range between highest and lowest fitness scores when checking if fitness is flattening
 
-        //PATHS
+        /*//PATHS
         String path = "Tabs/Spinacino/MIDI/Spinacino_bassadans.mid";
         String tabPath = "Tabs/Spinacino/TAB/Spinacino_bassadans.tab";
 
@@ -29,7 +30,25 @@ public class Main {
 
         //COMPARING GA VS HUMAN WRITTEN TAB
         TabReader.compare(tabPath, TabReader.convertGeneratedTab(tab.allStrings));
-        convertTabFileToNumberFormat("Tabs/Spinacino/TAB/Spinacino.tab");
+        convertTabFileToNumberFormat("Tabs/Spinacino/TAB/Spinacino.tab");*/
+
+
+
+        checkDatabase("Tabs/A_Mudarra/MIDI","Tabs/A_Mudarra/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        checkDatabase("Tabs/F_da_Milano/MIDI","Tabs/F_da_Milano/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        checkDatabase("Tabs/Galilei/MIDI","Tabs/Galilei/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        checkDatabase("Tabs/Misc_Italian/MIDI","Tabs/Misc_Italian/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        checkDatabase("Tabs/Segovia/MIDI","Tabs/Segovia/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        checkDatabase("Tabs/Skene/MIDI","Tabs/Skene/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        checkDatabase("Tabs/Spinacino/MIDI","Tabs/Spinacino/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        checkDatabase("Tabs/Valderrabano/MIDI","Tabs/Valderrabano/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+
+        double sum = 0;
+        for (double i :accs){
+            sum+=i;
+        }
+        Double averageAcc = sum/accs.size();
+        System.out.println("Total Average Accs: "+ averageAcc);
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
@@ -57,7 +76,9 @@ public class Main {
                     System.out.println(tabFiles[i]);
                     GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
                     GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(midiFiles[i].toString(),iterations, populationSize, numberOfSelections, crossover, interval, runLength, range);
-                    totalAccuracy+=TabReader.compare(tabFiles[i].toString(), TabReader.convertGeneratedTab(tab.allStrings));
+                    double accForTab = TabReader.compare(tabFiles[i].toString(), TabReader.convertGeneratedTab(tab.allStrings));
+                    accs.add(accForTab);
+                    totalAccuracy+=accForTab;
                     System.out.println("-------------------------------------------------------------");
 
 
