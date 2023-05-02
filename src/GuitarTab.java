@@ -127,9 +127,9 @@ public class GuitarTab implements Comparable<GuitarTab> {
             //select array with lowes true_count // if draw latest
             int lowestCountIndex = lowestTrueCount(noteMatrix, setChordList);
 
-            int random_index = pickRandomIndex(noteMatrix[lowestCountIndex]);
+            int randomIndex = pickRandomIndex(noteMatrix[lowestCountIndex]);
             //set all others to false
-            set(noteMatrix,random_index,lowestCountIndex);
+            set(noteMatrix,randomIndex,lowestCountIndex);
             //add index of set note to list
             setChordList.add(lowestCountIndex);
 
@@ -138,8 +138,8 @@ public class GuitarTab implements Comparable<GuitarTab> {
     }
 
 
-    static boolean checkMatrix(boolean[][] note_matrix){//function to see if each array in the matrix has a true count of one true_count is 1 for each note, returns true
-        for (boolean[] string_array:note_matrix) {
+    static boolean checkMatrix(boolean[][] noteMatrix){//function to see if each array in the matrix has a true count of one true_count is 1 for each note, returns true
+        for (boolean[] string_array:noteMatrix) {
             int true_count = 0;
             for (boolean string:string_array) {
                 if (string){

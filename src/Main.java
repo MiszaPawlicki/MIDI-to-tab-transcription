@@ -11,13 +11,14 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //PARAMETERS
-        int iterations = 5000; // maximum number of times the genetic algorithm will run (max number of generations)
-        int populationSize = 100; // Size of each population of guitar tab for each generation
-        int numOfSelections = 50; // number of tabs to select through tournament selection
-        double crossover = 0.3; // rate at which 2 tabs are crossed over
-        int interval = 200; // number of iterations before there is a check of whether fitness is flattening out
-        int runLength = 100; // number of fitness scores checked to see if flattening out
-        int range = 10; // max range between highest and lowest fitness scores when checking if fitness is flattening
+        int iterations = 5000; // maximum number of times the genetic algorithm will run (max number of generations) //5000
+        int populationSize = 100; // Size of each population of guitar tab for each generation //100
+        double crossover = 0.3; // rate at which 2 tabs are crossed over //0.3
+        double mutationRate = 1; // rate at which genes are mutated // 1
+
+        int interval = 200; // number of iterations before there is a check of whether fitness is flattening out //200
+        int runLength = 100; // number of fitness scores checked to see if flattening out //100
+        int range = 10; // max range between highest and lowest fitness scores when checking if fitness is flattening //10
 
         /*//PATHS
         String path = "Tabs/Spinacino/MIDI/Spinacino_bassadans.mid";
@@ -25,30 +26,18 @@ public class Main {
 
         //RUNNING THE GA
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-        GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(path,iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
+        GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(path,iterations, populationSize, crossover, mutationRate, interval, runLength, range);
         //System.out.println(TabReader.convertGeneratedTab(tab.allStrings));
 
         //COMPARING GA VS HUMAN WRITTEN TAB
         TabReader.compare(tabPath, TabReader.convertGeneratedTab(tab.allStrings));
         convertTabFileToNumberFormat("Tabs/Spinacino/TAB/Spinacino.tab");*/
 
+        //parameters
 
+        //ALL TABS
 
-        checkDatabase("Tabs/A_Mudarra/MIDI","Tabs/A_Mudarra/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
-        checkDatabase("Tabs/F_da_Milano/MIDI","Tabs/F_da_Milano/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
-        checkDatabase("Tabs/Galilei/MIDI","Tabs/Galilei/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
-        checkDatabase("Tabs/Misc_Italian/MIDI","Tabs/Misc_Italian/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
-        checkDatabase("Tabs/Segovia/MIDI","Tabs/Segovia/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
-        checkDatabase("Tabs/Skene/MIDI","Tabs/Skene/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
-        checkDatabase("Tabs/Spinacino/MIDI","Tabs/Spinacino/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
-        checkDatabase("Tabs/Valderrabano/MIDI","Tabs/Valderrabano/TABS",iterations, populationSize, numOfSelections, crossover, interval, runLength, range);
-
-        double sum = 0;
-        for (double i :accs){
-            sum+=i;
-        }
-        Double averageAcc = sum/accs.size();
-        System.out.println("Total Average Accs: "+ averageAcc);
+        Experiment.experimentOne();
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
@@ -56,7 +45,7 @@ public class Main {
         return fileToMove.renameTo(new File(targetPath));
     }
 
-    public static void checkDatabase(String midiFolderPath, String tabFolderPath, int iterations, int populationSize, int numberOfSelections, double crossover, int interval, int runLength, int range) throws Exception{
+    public static void checkDatabase(String midiFolderPath, String tabFolderPath, int iterations, int populationSize, double crossover, double mutationRate, int interval, int runLength, int range) throws Exception{
         /*
             A function to check what midi files within a folder can be transcribed by the program depending on tuning
 
@@ -75,7 +64,7 @@ public class Main {
                     System.out.println(midiFiles[i]);
                     System.out.println(tabFiles[i]);
                     GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
-                    GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(midiFiles[i].toString(),iterations, populationSize, numberOfSelections, crossover, interval, runLength, range);
+                    GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(midiFiles[i].toString(),iterations, populationSize, crossover, mutationRate, interval, runLength, range);
                     double accForTab = TabReader.compare(tabFiles[i].toString(), TabReader.convertGeneratedTab(tab.allStrings));
                     accs.add(accForTab);
                     totalAccuracy+=accForTab;

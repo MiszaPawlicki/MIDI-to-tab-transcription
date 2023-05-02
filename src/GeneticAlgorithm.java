@@ -5,7 +5,7 @@ import java.util.*;
 public class GeneticAlgorithm {
 
     private static GuitarTab[] population;
-    private static ArrayList<Double> generational_fitness = new ArrayList<>();
+    private static ArrayList<Double> generationalFitness = new ArrayList<>();
     protected static MidiFileReader midiFileReader;
     //private static HashMap<int[], String> chordDictionary = new HashMap<>();
     public static HashSet<int[]> chordDictionary = new HashSet<>();
@@ -285,7 +285,7 @@ public class GeneticAlgorithm {
     }
 
     //method to create 2 child tabs from 2 parent tabs
-    static void reproduce(ArrayList<Integer> indexOfFittest, double crossoverValue){//for each 2 tabs selected in the tournament, swap the middle third to create new child tabs
+    static void reproduce(ArrayList<Integer> indexOfFittest, double crossoverValue, double mutationRate){//for each 2 tabs selected in the tournament, swap the middle third to create new child tabs
         int counter = 0;
         GuitarTab[] newPopulation = new GuitarTab[population.length];
         Random rand = new Random();
@@ -306,9 +306,9 @@ public class GeneticAlgorithm {
 
             //randomly choose one child tab to mutate
             if(rand.nextInt(2)==1){
-                childTab1 = mutate(childTab1);
+                childTab1 = mutate(childTab1, mutationRate);
             }else{
-                childTab2 = mutate(childTab2);
+                childTab2 = mutate(childTab2, mutationRate);
             }
 
             //add new tabs to the population
@@ -346,16 +346,16 @@ public class GeneticAlgorithm {
     }
 
     // a function to randomly change one note within a guitar tab
-    public static GuitarTab mutate(GuitarTab guitarTab){
+    public static GuitarTab mutate(GuitarTab guitarTab, double mutationRate){
         Random random = new Random();
         ArrayList<Integer> indexList = new ArrayList<>();
         //pick random string
         int randomStringIndex=random.nextInt(6);
-        int[] string_array = getStringArray(randomStringIndex,guitarTab);//select a string at random
+        int[] stringArray = getStringArray(randomStringIndex,guitarTab);//select a string at random
 
         //for each tick in the string add the tick number if the value is not -1
-        for(int i = 0; i<string_array.length;i++){
-            if(string_array[i]!=-1){//get index of all notes played on that string
+        for(int i = 0; i<stringArray.length;i++){
+            if(stringArray[i]!=-1){//get index of all notes played on that string
                 indexList.add(i);
             }
         }
@@ -366,7 +366,10 @@ public class GeneticAlgorithm {
         int randomElement = random.nextInt(indexList.size());
         int randomTick = indexList.get(randomElement);//select a note index at random
 
-        guitarTab.randomlyChangeNote(randomStringIndex, randomTick);
+        if (Math.random()<mutationRate){
+            guitarTab.randomlyChangeNote(randomStringIndex, randomTick);
+        }
+
 
         return guitarTab;
     }
@@ -379,7 +382,7 @@ public class GeneticAlgorithm {
             total+=guitarTab.fitness;
         }
         total=total/population.length;
-        generational_fitness.add(total);
+        generationalFitness.add(total);
 
     }
 
@@ -403,16 +406,16 @@ public class GeneticAlgorithm {
     }
 
     //method to run all steps in the genetic algorithm
-    public GuitarTab runGeneticAlgorithm(String path, int iterations, int populationSize, int numberOfSelections, double crossover, int interval, int runLength, int range) throws Exception {
+    public GuitarTab runGeneticAlgorithm(String path, int iterations, int populationSize, double crossover, double mutationRate, int interval, int runLength, int range) throws Exception {
         populateChordDictionary();
         generatePopulation(populationSize,path);
 
         for(int i = 0; i<iterations;i++){
             calculateEachMemberFitness();
-            ArrayList<Integer> indexesOfFittest = tournamentSelection(numberOfSelections);
+            ArrayList<Integer> indexesOfFittest = tournamentSelection(populationSize/2);
             calculateGenerationFitness();
-            //System.out.println("i: "+i+" "+generational_fitness.get(i));
-            reproduce(indexesOfFittest,crossover);
+            //System.out.println("i: "+i+" "+generationalFitness.get(i));
+            reproduce(indexesOfFittest,crossover, mutationRate);
             calculateEachMemberFitness();
             Arrays.sort(population);
 
@@ -420,12 +423,12 @@ public class GeneticAlgorithm {
                 break;
             }
         }
-        System.out.println("i: " + (generational_fitness.size()-1)+" size: "+population[0].numTicks);
-        population[0].printTab(midiFileReader.resolution);
+        System.out.println("i: " + (generationalFitness.size()-1)+" size: "+population[0].numTicks);
+        //population[0].printTab(midiFileReader.resolution);
         return population[0];
     }
 
-    public boolean checkFitnessMonotony(int i, int interval, int runLength, int range){
+    private boolean checkFitnessMonotony(int i, int interval, int runLength, int range){
         /*
             Function to check if there is little to no change in generational fitness. Returns true if no change else
             false
@@ -439,11 +442,11 @@ public class GeneticAlgorithm {
             double totalFitness = 0;
             double averageFitness;
             double highestFitness = 0;
-            double lowestFitness = generational_fitness.get(generational_fitness.size()-1);
+            double lowestFitness = generationalFitness.get(generationalFitness.size()-1);
             double currentFitness = 0;
 
             for(int j = i; j>(i-runLength); j--){
-                currentFitness = generational_fitness.get(j);
+                currentFitness = generationalFitness.get(j);
                 if(currentFitness<lowestFitness){
                     lowestFitness = currentFitness;
                 }

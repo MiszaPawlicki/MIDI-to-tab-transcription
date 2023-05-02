@@ -171,8 +171,8 @@ public class TabReader {
                 if(generatedTabRows[i].stripTrailing().equals(grandTruthRows[i].stripTrailing())){
                     counter++;
                 }else{
-                    System.out.println("gen: "+generatedTabRows[i].stripTrailing());
-                    System.out.println("GT: "+grandTruthRows[i].stripTrailing());
+                    //System.out.println("gen: "+generatedTabRows[i].stripTrailing());
+                    //System.out.println("GT: "+grandTruthRows[i].stripTrailing());
                 }
             }
 
