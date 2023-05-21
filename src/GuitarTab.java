@@ -41,9 +41,6 @@ public class GuitarTab implements Comparable<GuitarTab> {
     public static final String[] TOP_E_NOTE_NAMES = {"G4", "G#4", "A4", "A#4", "B4","C5", "C#5", "D5", "D#5","E5", "F5"};
 
 
-
-
-
     public GuitarTab(int numTicks) {
         this.bottomE = new int[numTicks];
         this.aString = new int[numTicks];
@@ -106,11 +103,14 @@ public class GuitarTab implements Comparable<GuitarTab> {
     //a function to return an array list of all notes played at a given tick
     public static ArrayList<Note> getSimultaneousNotes(int tick, ArrayList<Note> notes){
         ArrayList<Note> simultaneousNotes = new ArrayList<>();
-
+        boolean done = false;
         //for each note in the note list. if the tick is equal to the tick parameter, add note to the simultaneous notes list
         for (Note note:notes) {
             if(note.tick==tick){
+                done = true;
                 simultaneousNotes.add(note);
+            }else if (done == true){
+                break;
             }
         }
         return simultaneousNotes;
@@ -139,15 +139,15 @@ public class GuitarTab implements Comparable<GuitarTab> {
 
 
     static boolean checkMatrix(boolean[][] noteMatrix){//function to see if each array in the matrix has a true count of one true_count is 1 for each note, returns true
-        for (boolean[] string_array:noteMatrix) {
-            int true_count = 0;
-            for (boolean string:string_array) {
-                if (string){
-                    true_count++;
-                    if(true_count>1){
-                        return false;
-                    }
+        for (boolean[] stringArray:noteMatrix) {
+            int trueCount = 0;
+            for (boolean string:stringArray) {
+                if (string) {
+                    trueCount++;
                 }
+            }
+            if(trueCount>1){
+                return false;
             }
         }
         return true;
@@ -178,7 +178,6 @@ public class GuitarTab implements Comparable<GuitarTab> {
             indexCounter++;
         }
 
-
         return lowestCountIndex;
     }
 
@@ -194,9 +193,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
         }
 
         Random random = new Random();
-        if(!(trueIndexList.size()>0)){
-            System.out.println();
-        }
+
         randomIndex = random.nextInt(trueIndexList.size());
 
         return trueIndexList.get(randomIndex);
