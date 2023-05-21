@@ -145,10 +145,11 @@ public class GuitarTab implements Comparable<GuitarTab> {
                 if (string) {
                     trueCount++;
                 }
+                if(trueCount>1){
+                    return false;
+                }
             }
-            if(trueCount<1){
-                return false;
-            }
+
         }
         return true;
     }
@@ -200,7 +201,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
     }
 
 
-    public static void set(boolean[][] noteMatrix, int stringIndex, int noteIndex){//string index - index of the string being set, note index - index of the note being set
+    public static boolean[][] set(boolean[][] noteMatrix, int stringIndex, int noteIndex){//string index - index of the string being set, note index - index of the note being set
         /////FUNCTION TO SET ALL NOTES BUT ONE TO TRUE OF A CERTAIN STRING VALUE // need to alter to set the string itself.
         for(int i=0; i<noteMatrix.length;i++){
             if(i!=noteIndex){
@@ -216,8 +217,9 @@ public class GuitarTab implements Comparable<GuitarTab> {
                     }
                 }
             }
-
         }
+        //added for unit testing
+        return noteMatrix;
     }
     public void placeSingleNote(Note note) throws Exception {
         boolean[] noteArray;//initialise array to show if a note can be played (from bottom E to top E)

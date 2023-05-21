@@ -119,7 +119,7 @@ public class GeneticAlgorithm {
     }
 
     //a method to generate the population of guitar tabs
-    private static void generatePopulation(int populationSize, String path) throws Exception {
+    public static void generatePopulation(int populationSize, String path) throws Exception {
         readMidiFile(path);//read midi file
         population = new GuitarTab[populationSize];
 
@@ -424,7 +424,7 @@ public class GeneticAlgorithm {
             }
         }
         System.out.println("i: " + (generationalFitness.size()-1)+" size: "+population[0].numTicks);
-        //population[0].printTab(midiFileReader.resolution);
+        population[0].printTab(midiFileReader.resolution);
         return population[0];
     }
 
@@ -468,6 +468,10 @@ public class GeneticAlgorithm {
             return false;
         }
         return false;
+    }
+
+    public static GuitarTab[] getPopulation() {
+        return population;
     }
 
     public static void main(String[] args) throws InvalidMidiDataException, IOException {

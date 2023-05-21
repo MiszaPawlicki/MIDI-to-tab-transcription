@@ -2,8 +2,8 @@ import jdk.jfr.Description;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class UnitTests {
 
@@ -177,13 +177,13 @@ public class UnitTests {
 
         //matrix where all notes have a place to play
         boolean[][] testMatrixOne = new boolean[][]{{true, false, false, false, false, false,},
-                {false, true, true, false, false, false},
+                {false, true, false, false, false, false},
                 {false, false, false, false, false, true}};
 
-        //matrix where NOT all notes have a place to play
+        //matrix where some notes have more than one place to play a place to play
         boolean[][] testMatrixTwo = new boolean[][]{{true, false, false, false, false, false,},
-                {false, true, true, false, false, false},
-                {false, false, false, false, false, false}};
+                {false, false, true, true, false, false},
+                {false, false, false, false, false, true}};
 
         //check function returns true and false correctly
         Assert.assertTrue(guitarTab.checkMatrix(testMatrixOne));
@@ -248,12 +248,82 @@ public class UnitTests {
     @Test
     @DisplayName("Testing that set correctly marks strings as false when a note is placed on a string")
     public void testSet(){
+        GuitarTab guitarTab = new GuitarTab(100);
 
+        //test matrices
+        boolean[][] noteMatrix = new boolean[][]{{true, true, true, false, false, false,},
+                {false, true, true, true, false, false},
+                {false, false, true, true, true, false}};
+
+        boolean[][] goalMatrix = new boolean[][]{{true, true, false, false, false, false},
+                {false, true, false, true, false, false},
+                {false, false, true, false, false, false}};
+
+        //setting the note
+        boolean[][] testOne = guitarTab.set(noteMatrix, 2,2);
+
+        //should set values to false for the locations in which other notes can play
+        Assert.assertArrayEquals(goalMatrix, testOne);
     }
 
     // testing configureChord
+    @Test
+    @DisplayName("testing that configure chord can correctly find a valid fretting where all notes are placed")
+    public void testConfigureChord(){
+        GuitarTab guitarTab = new GuitarTab(100);
+        ArrayList<Note> notes = new ArrayList<>();
+
+        //notes to be placed
+        Note noteOne = new Note(0,"G",2);
+        Note noteTwo = new Note(0,"E",3);
+        Note noteThree = new Note(0,"F",3);
+        Note noteFour = new Note(0,"C#",4);
+        Note noteFive = new Note(0,"D",4);
+        Note noteSix = new Note(0,"C",5);
+
+        notes.add(noteOne);
+        notes.add(noteTwo);
+        notes.add(noteThree);
+        notes.add(noteFour);
+        notes.add(noteFive);
+        notes.add(noteSix);
+
+        //configure the chord
+        boolean[][] chord = guitarTab.configureChord(notes);
+
+        //only possible fretting
+        boolean[][] goalConfiguration = new boolean[][]{
+                {true, false, false, false, false, false},
+                {false, true, false, false, false, false},
+                {false, false, true, false, false, false},
+                {false, false, false, true, false, false},
+                {false, false, false, false, true, false},
+                {false, false, false, false, false, true}
+        };
+
+        //check correct
+        Assert.assertArrayEquals(goalConfiguration, chord);
+    }
 
     // testing generatePopulation
+    @Test
+    @DisplayName("Testing that the program can correctly generate a list of guitar tabs")
+    public void testGeneratePopulation() throws Exception {
+        //generate population
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
+        geneticAlgorithm.generatePopulation(100,"Tabs/F_da_Milano/MIDI/001_FMRicercar01.mid");
+
+        //get population
+        GuitarTab[] population = geneticAlgorithm.getPopulation();
+
+        //check length
+        Assert.assertTrue(population.length==100);
+
+        //check all guitarTab objects
+        for(GuitarTab gt : population){
+            Assert.assertTrue(gt != null);
+        }
+    }
 
     // testing euclideanDistance
 
