@@ -146,7 +146,7 @@ public class GuitarTab implements Comparable<GuitarTab> {
                     trueCount++;
                 }
             }
-            if(trueCount>1){
+            if(trueCount<1){
                 return false;
             }
         }
