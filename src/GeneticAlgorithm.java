@@ -226,7 +226,7 @@ public class GeneticAlgorithm {
     }
 
     // a function to calculate the euclidean distance between two arrays
-    private static double euclideanDistance(int[] x, int[] y){//for single notes
+    public static double euclideanDistance(int[] x, int[] y){//for single notes
 
         int xCounter = 0;
         int yCounter = 0;
@@ -237,8 +237,8 @@ public class GeneticAlgorithm {
             if(x[i]!=-1){
                 for(int j=0; j<y.length;j++){
                     if(y[j]!=-1){
-                        int a = i+x[i];
-                        int b = j+y[j];
+                        int a = i+1+x[i];
+                        int b = j+1+y[j];
                         double distance = Math.sqrt(Math.pow(a,2)+Math.pow(b,2));//x(string, fret), y(string, fret)///////i and y indicate string,
                         total+=distance;
                         yCounter++;
@@ -247,6 +247,7 @@ public class GeneticAlgorithm {
                 xCounter++;
             }
         }
+
         int numberOfConnections = xCounter+yCounter;
         total = total/numberOfConnections;
         //divide total distance by number of connections

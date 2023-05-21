@@ -321,15 +321,42 @@ public class UnitTests {
 
         //check all guitarTab objects
         for(GuitarTab gt : population){
-            Assert.assertTrue(gt != null);
+            Assert.assertNotNull(gt);
         }
     }
 
-    // testing euclideanDistance
+    // testing euclideanDistance, serves as the fitness function
+    @Test
+    @DisplayName("Testing that euclidean distance calculates correctly")
+    public void testEuclideanDistance(){
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
+        int[] testArrayOne = new int[]{0};
+        int[] testArrayTwo = new int[]{0};
+        int[] testArrayThree = new int[]{1,1};
+        int[] testArrayFour = new int[]{2,2};
 
-    // testing calculateFitness
+
+        double testOneTotal = geneticAlgorithm.euclideanDistance(testArrayOne,testArrayTwo);
+        double testTwoTotal = geneticAlgorithm.euclideanDistance(testArrayThree,testArrayFour);
+
+        //Not zero because its euclidean distance of string fret pain
+        Assert.assertTrue(0.7071067811865476 == testOneTotal);
+
+        //should be 2.8867213195971426
+        Assert.assertTrue(2.8867213195971426 == testTwoTotal);
+    }
+
 
     // testing tournamentSelection
+    @Test
+    @DisplayName("Testing tournament selection favours the correct tab")
+    public void testTournamentSelection(){
+        // create population randomly select 2
+
+        // store fittest in own var
+
+        //tournament selection, should select the fittest
+    }
 
     // testing crossover
 
