@@ -131,7 +131,7 @@ public class GeneticAlgorithm {
     }
 
     //a method to calculate the fitness of each individual member of the population
-    private static void calculateEachMemberFitness(){
+    public static void calculateEachMemberFitness(){
         long currentTick = -1;
         int[] currentSimultaneousNotes = null;
         int[] previousSimultaneousNotes;
@@ -255,7 +255,7 @@ public class GeneticAlgorithm {
     }
 
     //randomly select two tabs and return the index of the tabs that one their individual comparisons
-    private static ArrayList<Integer> tournamentSelection(int numSelections){
+    public static ArrayList<Integer> tournamentSelection(int numSelections){
         Random random = new Random();
         ArrayList<Integer> indexOfFittest = new ArrayList<>();
 

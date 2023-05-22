@@ -2,6 +2,8 @@ import jdk.jfr.Description;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -350,19 +352,107 @@ public class UnitTests {
     // testing tournamentSelection
     @Test
     @DisplayName("Testing tournament selection favours the correct tab")
-    public void testTournamentSelection(){
+    public void testTournamentSelection() throws Exception {
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
+
         // create population randomly select 2
+        geneticAlgorithm.generatePopulation(2,"Tabs/F_da_Milano/MIDI/001_FMRicercar01.mid");
+        geneticAlgorithm.calculateEachMemberFitness();
 
-        // store fittest in own var
+        //tournament selection, should select the fittest, the fittest will be at index zero of the population
+        ArrayList<Integer> indexList = geneticAlgorithm.tournamentSelection(1);
+        int indexOfFittest = indexList.get(0);
 
-        //tournament selection, should select the fittest
+        //check index is correct
+        Assert.assertEquals(0,indexOfFittest);
+
     }
 
     // testing crossover
+    @Test
+    @DisplayName("Testing crossover correctly merges two tabs")
+    public void testCrossover() throws Exception {
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
 
+        // create population randomly select 2
+        geneticAlgorithm.generatePopulation(2,"Tabs/F_da_Milano/MIDI/001_FMRicercar01.mid");
+        geneticAlgorithm.calculateEachMemberFitness();
+        GuitarTab[] population = geneticAlgorithm.getPopulation();
+        GeneticAlgorithm.crossover(population[0],population[1],0.5);
+    }
     // testing mutation
+    @Test
+    @DisplayName("Testing mutation changes notes in the tab")
+    public void testMutation() throws Exception {
+        GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
+
+        // create population of 1
+        geneticAlgorithm.generatePopulation(1,"Tabs/F_da_Milano/MIDI/001_FMRicercar01.mid");
+        GuitarTab initialTab = geneticAlgorithm.getPopulation()[0];
+
+        //create a copy for comparatative purposes
+        GuitarTab initialTabCopy = new GuitarTab(geneticAlgorithm.getPopulation()[0].numTicks);
+
+        initialTabCopy.bottomE = Arrays.copyOf(initialTab.bottomE,initialTab.bottomE.length);
+        initialTabCopy.aString = Arrays.copyOf(initialTab.aString,initialTab.aString.length);
+        initialTabCopy.dString = Arrays.copyOf(initialTab.dString,initialTab.dString.length);
+        initialTabCopy.gString = Arrays.copyOf(initialTab.gString,initialTab.gString.length);
+        initialTabCopy.bString = Arrays.copyOf(initialTab.bString,initialTab.bString.length);
+        initialTabCopy.topE = Arrays.copyOf(initialTab.topE,initialTab.topE.length);
+
+        //mutate the tab
+        GuitarTab mutatedTab = geneticAlgorithm.mutate(initialTab, 1);
+
+        //check at least one string array is different
+        boolean tabsEqual = true;
+
+        if(!Arrays.equals(initialTabCopy.bottomE,mutatedTab.bottomE)){
+            tabsEqual = false;
+        }else if(!Arrays.equals(initialTabCopy.aString,mutatedTab.aString)){
+            tabsEqual = false;
+        }else if(!Arrays.equals(initialTabCopy.dString,mutatedTab.dString)){
+            tabsEqual = false;
+        }else if(!Arrays.equals(initialTabCopy.gString,mutatedTab.gString)){
+            tabsEqual = false;
+        }else if(!Arrays.equals(initialTabCopy.bString,mutatedTab.bString)){
+            tabsEqual = false;
+        }else if(!Arrays.equals(initialTabCopy.topE,mutatedTab.topE)){
+            tabsEqual = false;
+        }
+
+        //check at least one note has changed
+        Assert.assertFalse(tabsEqual);
+
+    }
 
     // testing randomlyChangeNote
+    @Test
+    @DisplayName("Testing randomly change note changes a note")
+    public void testRandomlyChangeNote() throws Exception {
+        GuitarTab guitarTab = new GuitarTab(100);
 
+        //place a note that has two possible places to play
+        Note noteOne = new Note(0,"C",3);
+        ArrayList<Note> notes = new ArrayList<>();
+        notes.add(noteOne);
+        guitarTab.placeSingleNote(noteOne);
+
+        //switch note to other possible location
+        if(guitarTab.bottomE[0] != -1){
+            guitarTab.randomlyChangeNote(0,0);
+
+            //check original string now empty and new string has note placed
+            Assert.assertTrue(guitarTab.bottomE[0]==-1);
+            Assert.assertTrue(guitarTab.aString[0]!=-1);
+        }else if(guitarTab.aString[0] != -1){
+            guitarTab.randomlyChangeNote(0,0);
+
+            //check original string not empty and new string has nothing placed
+            Assert.assertTrue(guitarTab.bottomE[0]!=-1);
+            Assert.assertTrue(guitarTab.aString[0]==-1);
+        }
+
+
+    }
 
 }
