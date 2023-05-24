@@ -79,15 +79,12 @@ public class UnitTests {
     @Test
     @DisplayName("Testing that randomlyPlaceNote correctly places an int in the correct place")
     public void testRandomlyPlaceNote() throws Exception {
-
         GuitarTab guitarTab = new GuitarTab(100);
 
         // test one - place a note with one possible fretting
         guitarTab.randomlyPlaceNote(new boolean[] {true, false,false,false,false,false},"G2", 0 );
-
         // test two - place note with two possible frettings
         guitarTab.randomlyPlaceNote(new boolean[]{false, false, false, false, true, true}, "G#4", 1);
-
         // test three - place note with three possible frettings
         guitarTab.randomlyPlaceNote(new boolean[]{false, true, true, true, false, false}, "A3", 2);
 
@@ -118,8 +115,6 @@ public class UnitTests {
         Assert.assertTrue(testOne);
         Assert.assertTrue(testTwo);
         Assert.assertTrue(testThree);
-
-
     }
 
     // testing placeSingleNote
@@ -270,7 +265,8 @@ public class UnitTests {
 
     // testing configureChord
     @Test
-    @DisplayName("testing that configure chord can correctly find a valid fretting where all notes are placed")
+    @DisplayName("testing that configure chord can correctly find " +
+            "a valid fretting where all notes are placed")
     public void testConfigureChord(){
         GuitarTab guitarTab = new GuitarTab(100);
         ArrayList<Note> notes = new ArrayList<>();
@@ -380,6 +376,7 @@ public class UnitTests {
         GuitarTab[] population = geneticAlgorithm.getPopulation();
         GeneticAlgorithm.crossover(population[0],population[1],0.5);
     }
+
     // testing mutation
     @Test
     @DisplayName("Testing mutation changes notes in the tab")
@@ -387,7 +384,8 @@ public class UnitTests {
         GeneticAlgorithm geneticAlgorithm = new GeneticAlgorithm();
 
         // create population of 1
-        geneticAlgorithm.generatePopulation(1,"Tabs/F_da_Milano/MIDI/001_FMRicercar01.mid");
+        geneticAlgorithm.generatePopulation(1,"Tabs/F_da_Milano/" +
+                "MIDI/001_FMRicercar01.mid");
         GuitarTab initialTab = geneticAlgorithm.getPopulation()[0];
 
         //create a copy for comparatative purposes
@@ -451,8 +449,6 @@ public class UnitTests {
             Assert.assertTrue(guitarTab.bottomE[0]!=-1);
             Assert.assertTrue(guitarTab.aString[0]==-1);
         }
-
-
     }
 
 }

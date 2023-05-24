@@ -13,14 +13,14 @@ public class Main {
         //PARAMETERS
         int iterations = 5000; // maximum number of times the genetic algorithm will run (max number of generations) //5000
         int populationSize = 100; // Size of each population of guitar tab for each generation //100
-        double crossover = 0.3; // rate at which 2 tabs are crossed over //0.3
+        double crossover = 0.5; // rate at which 2 tabs are crossed over //0.5
         double mutationRate = 1; // rate at which genes are mutated // 1
 
         int interval = 200; // number of iterations before there is a check of whether fitness is flattening out //200
         int runLength = 100; // number of fitness scores checked to see if flattening out //100
         int range = 10; // max range between highest and lowest fitness scores when checking if fitness is flattening //10
 
-        //PATHS
+        //PATHS - change these to transcribe a different tab
         String path = "Tabs/Spinacino/MIDI/Spinacino_bassadans.mid";
         String tabPath = "Tabs/Spinacino/TABS/Spinacino_bassadans.tab";
 
@@ -29,15 +29,9 @@ public class Main {
         GuitarTab tab = geneticAlgorithm.runGeneticAlgorithm(path,iterations, populationSize, crossover, mutationRate, interval, runLength, range);
         //System.out.println(TabReader.convertGeneratedTab(tab.allStrings));
 
-        //COMPARING GA VS HUMAN WRITTEN TAB
+        //COMPARING GA VS HUMAN WRITTEN TAB - comment this out if you don't want to compare a tab file to the transcription
         TabReader.compare(tabPath, TabReader.convertGeneratedTab(tab.allStrings));
         convertTabFileToNumberFormat("Tabs/Spinacino/TABS/Spinacino_bassadans.tab");
-
-        //parameters
-
-        //ALL TABS
-
-        //Experiment.experimentOne();
     }
 
     public static boolean moveFile(String sourcePath, String targetPath) {
