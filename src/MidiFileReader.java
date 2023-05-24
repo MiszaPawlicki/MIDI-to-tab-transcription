@@ -23,22 +23,19 @@ public class MidiFileReader {
     public static ArrayList<Note> readMidiFile(String path) throws Exception {
         //read midi file in
         Sequence sequence = MidiSystem.getSequence(new File(path));
-
         ArrayList<Note> noteArrayList = new ArrayList<>();
+
         //loop through each track
         for(Track track : sequence.getTracks()){
 
             //loop through each track event
             for(int i=0; i<track.size();i++){
                 MidiEvent event = track.get(i);
-
-
                 MidiMessage message = event.getMessage();
+
                 if(message instanceof ShortMessage){
                     //print info including the tick, event type and note information
-                    //System.out.print("Tick: " + event.getTick()+" - ");
                     ShortMessage sm = (ShortMessage) message;
-                    //System.out.print("Channel: " + sm.getChannel() + " - ");
                     if (sm.getCommand() == NOTE_ON) { //print data for note on
                         int key = sm.getData1();
                         int octave = (key / 12)-1;
@@ -46,13 +43,11 @@ public class MidiFileReader {
                             throw new Exception("error");
                         }
                         int note = key % 12;
-                        String noteName = NOTE_NAMES[note];
 
+                        String noteName = NOTE_NAMES[note];
                         Note tempNote = new Note(event.getTick(),noteName,octave);
 
                         noteArrayList.add(tempNote);
-
-                        //System.out.println("Note added, " + noteName + octave + " key=" + key);
                     }
                 }
             }
@@ -72,20 +67,8 @@ public class MidiFileReader {
         Sequence sequence = MidiSystem.getSequence(new File(path));
         return sequence.getResolution();
     }
+
     public static void main(String[] args) throws Exception{
-        String path = "new.mid";
-
-        MidiFileReader midiFileReader = new MidiFileReader(path);
-
-        for (Note n: notes) {
-            System.out.println("NOTE: "+n.fullNoteName + " - TICK: "+n.tick);
-        }
-
-        GuitarTab guitarTab = new GuitarTab((int) tickLength);
-        guitarTab.generateTab(notes);
-        guitarTab.printTab(midiFileReader.resolution);
-
 
     }
-
 }
