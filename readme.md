@@ -1,4 +1,4 @@
-This program transcribes MIDI files written for the lute into luta tablature. The program currently only transcribes in the tuning {G2, C3, F3, A3, D4, G4}.
+This program transcribes MIDI files written for the lute into lute tablature. The program currently only transcribes in the tuning {G2, C3, F3, A3, D4, G4}.
 
 To use the program:
   1) unzip and open into preffered IDE
